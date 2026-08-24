@@ -119,3 +119,4 @@ class PathSeekerApp extends StatelessWidget {
 // muhammadwasaysiddiqui05@gmail.com (wasaysidd123)=>professional
 // careerpath026@gmail.com (careerpath123)=> graduate
 // abdulwasaysiddiqui20@gmail.com (wasay123)=>student
+// sheikhaamina27@gmail.com (aamna123)=>admin
