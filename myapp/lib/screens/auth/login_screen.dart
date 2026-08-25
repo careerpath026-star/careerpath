@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/screens/AdminDashboard/admin_dashboard.dart';
 import 'package:myapp/screens/GraduateDashboard/graduate_dashboard.dart';
+import 'package:myapp/screens/GraduateDashboard/graduate_home.dart';
 import 'package:myapp/screens/ProfessionalDashboard/professional_dashboard.dart';
 
 import '../../core/constants/app_colors.dart';
@@ -102,7 +103,7 @@ if (userType == 'professional') {
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(
-      builder: (_) => const GraduateDashboard(),
+      builder: (_) => const GraduateHome(),
     ),
   );
 } else if (userType == 'admin') {
