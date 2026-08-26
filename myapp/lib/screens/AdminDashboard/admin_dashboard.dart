@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/screens/AdminDashboard/Admin_Drawer.dart';
 import 'package:myapp/screens/auth/login_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -9,6 +10,9 @@ class AdminDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FA),
+
+        drawer: const AdminDrawer(),
+
 
       appBar: AppBar(
         elevation: 0,

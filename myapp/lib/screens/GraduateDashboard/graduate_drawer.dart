@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/screens/GraduateDashboard/Saved_Careers.dart';
 import 'package:myapp/screens/GraduateDashboard/graduate_careers.dart';
 import 'package:myapp/screens/GraduateDashboard/graduate_profile.dart';
+import 'package:myapp/screens/GraduateDashboard/graduate_success_stories.dart';
 
 class GraduateDrawer extends StatelessWidget {
   const GraduateDrawer({super.key});
@@ -83,129 +84,129 @@ class GraduateDrawer extends StatelessWidget {
 
               // ==========================================
               // CAREER QUIZ
-              // ==========================================
+              // // ==========================================
 
-              _drawerItem(
-                context,
-                Icons.quiz_outlined,
-                "Career Quiz",
-                () {
-                  Navigator.pop(context);
+              // _drawerItem(
+              //   context,
+              //   Icons.quiz_outlined,
+              //   "Career Quiz",
+              //   () {
+              //     Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Career Quiz coming next.",
-                      ),
-                    ),
-                  );
-                },
-              ),
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text(
+              //           "Career Quiz coming next.",
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
-              // ==========================================
-              // CAREER BANK
-              // ==========================================
+              // // ==========================================
+              // // CAREER BANK
+              // // ==========================================
 
-              _drawerItem(
-                context,
-                Icons.work_outline,
-                "Career Bank",
-                () {
-                  Navigator.pop(context);
+              // _drawerItem(
+              //   context,
+              //   Icons.work_outline,
+              //   "Career Bank",
+              //   () {
+              //     Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Career Bank coming next.",
-                      ),
-                    ),
-                  );
-                },
-              ),
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text(
+              //           "Career Bank coming next.",
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
-              // ==========================================
-              // VIDEOS
-              // ==========================================
+              // // ==========================================
+              // // VIDEOS
+              // // ==========================================
 
-              _drawerItem(
-                context,
-                Icons.video_library_outlined,
-                "Videos",
-                () {
-                  Navigator.pop(context);
+              // _drawerItem(
+              //   context,
+              //   Icons.video_library_outlined,
+              //   "Videos",
+              //   () {
+              //     Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Videos coming next.",
-                      ),
-                    ),
-                  );
-                },
-              ),
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text(
+              //           "Videos coming next.",
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
-              // ==========================================
-              // RESOURCES
-              // ==========================================
+              // // ==========================================
+              // // RESOURCES
+              // // ==========================================
 
-              _drawerItem(
-                context,
-                Icons.menu_book_outlined,
-                "Resources",
-                () {
-                  Navigator.pop(context);
+              // _drawerItem(
+              //   context,
+              //   Icons.menu_book_outlined,
+              //   "Resources",
+              //   () {
+              //     Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Resources coming next.",
-                      ),
-                    ),
-                  );
-                },
-              ),
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text(
+              //           "Resources coming next.",
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
-              // ==========================================
-              // SUCCESS STORIES
-              // ==========================================
+              // // ==========================================
+              // // SUCCESS STORIES
+              // // ==========================================
 
-              _drawerItem(
-                context,
-                Icons.emoji_events_outlined,
-                "Success Stories",
-                () {
-                  Navigator.pop(context);
+              // _drawerItem(
+              //   context,
+              //   Icons.emoji_events_outlined,
+              //   "Success Stories",
+              //   () {
+              //     Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Success Stories coming next.",
-                      ),
-                    ),
-                  );
-                },
-              ),
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text(
+              //           "Success Stories coming next.",
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
-              // ==========================================
-              // BOOKMARKS
-              // ==========================================
+              // // ==========================================
+              // // BOOKMARKS
+              // // ==========================================
 
-              _drawerItem(
-                context,
-                Icons.bookmark_outline,
-                "Bookmarks",
-                () {
-                  Navigator.pop(context);
+              // _drawerItem(
+              //   context,
+              //   Icons.bookmark_outline,
+              //   "Bookmarks",
+              //   () {
+              //     Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Bookmarks coming next.",
-                      ),
-                    ),
-                  );
-                },
-              ),
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text(
+              //           "Bookmarks coming next.",
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
               // ==========================================
               // PROFILE
@@ -257,6 +258,23 @@ class GraduateDrawer extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) =>
                           const SavedCareersScreen(),
+                    ),
+                  );
+                },
+              ),
+
+              _drawerItem(
+                context,
+                Icons.person_outline,
+                "Success Stories",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const GraduateSuccessStories(),
                     ),
                   );
                 },

@@ -563,7 +563,808 @@
 
 
 
+// import 'package:flutter/material.dart';
+// import './graduate_sidebar.dart';
+
+// class GraduateHomePage extends StatefulWidget {
+//   const GraduateHomePage({super.key});
+
+//   @override
+//   State<GraduateHomePage> createState() => _GraduateHomePageState();
+// }
+
+// class _GraduateHomePageState extends State<GraduateHomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFFF6F8FC),
+
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         elevation: 0,
+//         iconTheme: const IconThemeData(color: Colors.black87),
+//         title: const Text(
+//           'PathSeeker',
+//           style: TextStyle(
+//             color: Colors.black87,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         actions: [
+//           IconButton(
+//             onPressed: () {},
+//             icon: const Icon(Icons.notifications_none),
+//           ),
+//           const SizedBox(width: 8),
+//         ],
+//       ),
+
+//       // Separate sidebar
+//       drawer: GraduateSidebar(
+//         onItemSelected: (index) {
+//           Navigator.pop(context);
+
+//           // Navigation will be connected later.
+//           debugPrint('Sidebar item: $index');
+//         },
+//       ),
+
+//       body: SafeArea(
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.all(20),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+
+//               // ==========================================
+//               // WELCOME SECTION
+//               // ==========================================
+
+//               const Text(
+//                 'Good Morning, Graduate 👋',
+//                 style: TextStyle(
+//                   fontSize: 26,
+//                   fontWeight: FontWeight.bold,
+//                   color: Color(0xFF172033),
+//                 ),
+//               ),
+
+//               const SizedBox(height: 6),
+
+//               Text(
+//                 'Continue your career journey and discover opportunities that match your skills.',
+//                 style: TextStyle(
+//                   fontSize: 14,
+//                   height: 1.5,
+//                   color: Colors.grey.shade600,
+//                 ),
+//               ),
+
+//               const SizedBox(height: 24),
+
+//               // ==========================================
+//               // PROFILE COMPLETION
+//               // ==========================================
+
+//               _sectionTitle('Profile Progress'),
+
+//               const SizedBox(height: 12),
+
+//               _profileProgressCard(),
+
+//               const SizedBox(height: 24),
+
+//               // ==========================================
+//               // CAREER ASSESSMENT
+//               // ==========================================
+
+//               _sectionTitle('Career Assessment'),
+
+//               const SizedBox(height: 12),
+
+//               _careerAssessmentCard(),
+
+//               const SizedBox(height: 28),
+
+//               // ==========================================
+//               // TOP PICKS
+//               // ==========================================
+
+//               _sectionTitle(
+//                 'Top Picks For You',
+//                 actionText: 'View All',
+//                 onAction: () {},
+//               ),
+
+//               const SizedBox(height: 12),
+
+//               SizedBox(
+//                 height: 190,
+//                 child: ListView(
+//                   scrollDirection: Axis.horizontal,
+//                   children: [
+//                     _careerCard(
+//                       icon: Icons.code,
+//                       title: 'Software Engineer',
+//                       category: 'Technology',
+//                       match: '88%',
+//                     ),
+
+//                     _careerCard(
+//                       icon: Icons.analytics_outlined,
+//                       title: 'Data Scientist',
+//                       category: 'Technology',
+//                       match: '83%',
+//                     ),
+
+//                     _careerCard(
+//                       icon: Icons.security_outlined,
+//                       title: 'Cyber Security',
+//                       category: 'Technology',
+//                       match: '78%',
+//                     ),
+//                   ],
+//                 ),
+//               ),
+
+//               const SizedBox(height: 28),
+
+//               // ==========================================
+//               // TRENDING CAREERS
+//               // ==========================================
+
+//               _sectionTitle(
+//                 'Trending Careers',
+//                 actionText: 'Explore',
+//                 onAction: () {},
+//               ),
+
+//               const SizedBox(height: 12),
+
+//               _trendingCareer(
+//                 number: '01',
+//                 title: 'AI / Machine Learning Engineer',
+//                 category: 'Technology',
+//                 icon: Icons.smart_toy_outlined,
+//               ),
+
+//               _trendingCareer(
+//                 number: '02',
+//                 title: 'Cloud Engineer',
+//                 category: 'Technology',
+//                 icon: Icons.cloud_outlined,
+//               ),
+
+//               _trendingCareer(
+//                 number: '03',
+//                 title: 'Data Scientist',
+//                 category: 'Technology',
+//                 icon: Icons.bar_chart_outlined,
+//               ),
+
+//               _trendingCareer(
+//                 number: '04',
+//                 title: 'Cyber Security Analyst',
+//                 category: 'Technology',
+//                 icon: Icons.shield_outlined,
+//               ),
+
+//               const SizedBox(height: 28),
+
+//               // ==========================================
+//               // RECENTLY VIEWED
+//               // ==========================================
+
+//               _sectionTitle(
+//                 'Recently Viewed',
+//                 actionText: 'View All',
+//                 onAction: () {},
+//               ),
+
+//               const SizedBox(height: 12),
+
+//               _recentItem(
+//                 icon: Icons.code,
+//                 title: 'Software Engineer',
+//                 subtitle: 'Technology',
+//               ),
+
+//               _recentItem(
+//                 icon: Icons.data_object,
+//                 title: 'Data Scientist',
+//                 subtitle: 'Technology',
+//               ),
+
+//               _recentItem(
+//                 icon: Icons.security,
+//                 title: 'Cyber Security Analyst',
+//                 subtitle: 'Technology',
+//               ),
+
+//               const SizedBox(height: 28),
+
+//               // ==========================================
+//               // RECOMMENDED LEARNING
+//               // ==========================================
+
+//               _sectionTitle(
+//                 'Recommended Learning',
+//                 actionText: 'View All',
+//                 onAction: () {},
+//               ),
+
+//               const SizedBox(height: 12),
+
+//               _learningCard(
+//                 icon: Icons.play_circle_outline,
+//                 title: 'Introduction to Data Science',
+//                 subtitle: 'Video • 12 min',
+//               ),
+
+//               _learningCard(
+//                 icon: Icons.picture_as_pdf_outlined,
+//                 title: 'Roadmap to Software Engineering',
+//                 subtitle: 'PDF • Beginner',
+//               ),
+
+//               _learningCard(
+//                 icon: Icons.play_circle_outline,
+//                 title: 'Cyber Security Fundamentals',
+//                 subtitle: 'Video • 18 min',
+//               ),
+
+//               const SizedBox(height: 30),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   // =====================================================
+//   // SECTION TITLE
+//   // =====================================================
+
+//   Widget _sectionTitle(
+//     String title, {
+//     String? actionText,
+//     VoidCallback? onAction,
+//   }) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             fontSize: 19,
+//             fontWeight: FontWeight.bold,
+//             color: Color(0xFF172033),
+//           ),
+//         ),
+
+//         if (actionText != null)
+//           TextButton(
+//             onPressed: onAction,
+//             child: Text(
+//               actionText,
+//               style: const TextStyle(
+//                 fontWeight: FontWeight.w600,
+//               ),
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+
+//   // =====================================================
+//   // PROFILE PROGRESS CARD
+//   // =====================================================
+
+//   Widget _profileProgressCard() {
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(20),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(18),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.04),
+//             blurRadius: 15,
+//             offset: const Offset(0, 5),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         children: [
+//           Row(
+//             children: [
+//               SizedBox(
+//                 height: 70,
+//                 width: 70,
+//                 child: Stack(
+//                   alignment: Alignment.center,
+//                   children: [
+//                     CircularProgressIndicator(
+//                       value: 0.80,
+//                       strokeWidth: 7,
+//                       backgroundColor: Colors.grey.shade200,
+//                       color: Colors.blue,
+//                     ),
+//                     const Text(
+//                       '80%',
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+
+//               const SizedBox(width: 18),
+
+//               const Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       'Complete your profile',
+//                       style: TextStyle(
+//                         fontSize: 17,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     SizedBox(height: 6),
+//                     Text(
+//                       'A complete profile helps us provide better career recommendations.',
+//                       style: TextStyle(
+//                         color: Colors.grey,
+//                         fontSize: 13,
+//                         height: 1.4,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+
+//           const SizedBox(height: 18),
+
+//           Row(
+//             children: [
+//               _checkItem('Education', true),
+//               _checkItem('Skills', true),
+//               _checkItem('Interests', true),
+//               _checkItem('Resume', false),
+//             ],
+//           ),
+
+//           const SizedBox(height: 16),
+
+//           SizedBox(
+//             width: double.infinity,
+//             child: OutlinedButton(
+//               onPressed: () {},
+//               child: const Text('Complete Profile'),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget _checkItem(String title, bool completed) {
+//     return Expanded(
+//       child: Row(
+//         children: [
+//           Icon(
+//             completed
+//                 ? Icons.check_circle
+//                 : Icons.radio_button_unchecked,
+//             size: 16,
+//             color: completed ? Colors.green : Colors.grey,
+//           ),
+//           const SizedBox(width: 4),
+//           Flexible(
+//             child: Text(
+//               title,
+//               style: const TextStyle(
+//                 fontSize: 11,
+//               ),
+//               overflow: TextOverflow.ellipsis,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // =====================================================
+//   // CAREER ASSESSMENT
+//   // =====================================================
+
+//   Widget _careerAssessmentCard() {
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(22),
+//       decoration: BoxDecoration(
+//         gradient: const LinearGradient(
+//           colors: [
+//             Color(0xFF2563EB),
+//             Color(0xFF4F46E5),
+//           ],
+//         ),
+//         borderRadius: BorderRadius.circular(20),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           const Icon(
+//             Icons.psychology_outlined,
+//             color: Colors.white,
+//             size: 35,
+//           ),
+
+//           const SizedBox(height: 15),
+
+//           const Text(
+//             'Discover Your Career Path',
+//             style: TextStyle(
+//               color: Colors.white,
+//               fontSize: 21,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           ),
+
+//           const SizedBox(height: 8),
+
+//           const Text(
+//             'Take our interest assessment and discover career fields that match your skills and interests.',
+//             style: TextStyle(
+//               color: Colors.white70,
+//               height: 1.5,
+//               fontSize: 13,
+//             ),
+//           ),
+
+//           const SizedBox(height: 18),
+
+//           ElevatedButton(
+//             onPressed: () {},
+//             style: ElevatedButton.styleFrom(
+//               backgroundColor: Colors.white,
+//               foregroundColor: Colors.blue,
+//               padding: const EdgeInsets.symmetric(
+//                 horizontal: 20,
+//                 vertical: 12,
+//               ),
+//             ),
+//             child: const Text(
+//               'Take Career Quiz',
+//               style: TextStyle(
+//                 fontWeight: FontWeight.bold,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // =====================================================
+//   // CAREER CARD
+//   // =====================================================
+
+//   Widget _careerCard({
+//     required IconData icon,
+//     required String title,
+//     required String category,
+//     required String match,
+//   }) {
+//     return Container(
+//       width: 220,
+//       margin: const EdgeInsets.only(right: 14),
+//       padding: const EdgeInsets.all(18),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(18),
+//         border: Border.all(
+//           color: Colors.grey.shade200,
+//         ),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             children: [
+//               Container(
+//                 padding: const EdgeInsets.all(10),
+//                 decoration: BoxDecoration(
+//                   color: Colors.blue.shade50,
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//                 child: Icon(
+//                   icon,
+//                   color: Colors.blue,
+//                 ),
+//               ),
+
+//               const Spacer(),
+
+//               Container(
+//                 padding: const EdgeInsets.symmetric(
+//                   horizontal: 8,
+//                   vertical: 5,
+//                 ),
+//                 decoration: BoxDecoration(
+//                   color: Colors.green.shade50,
+//                   borderRadius: BorderRadius.circular(20),
+//                 ),
+//                 child: Text(
+//                   '$match Match',
+//                   style: TextStyle(
+//                     color: Colors.green.shade700,
+//                     fontSize: 11,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+
+//           const Spacer(),
+
+//           Text(
+//             title,
+//             style: const TextStyle(
+//               fontSize: 16,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           ),
+
+//           const SizedBox(height: 5),
+
+//           Text(
+//             category,
+//             style: TextStyle(
+//               color: Colors.grey.shade600,
+//               fontSize: 12,
+//             ),
+//           ),
+
+//           const SizedBox(height: 10),
+
+//           const Text(
+//             'Explore Career →',
+//             style: TextStyle(
+//               color: Colors.blue,
+//               fontSize: 12,
+//               fontWeight: FontWeight.w600,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // =====================================================
+//   // TRENDING CAREER
+//   // =====================================================
+
+//   Widget _trendingCareer({
+//     required String number,
+//     required String title,
+//     required String category,
+//     required IconData icon,
+//   }) {
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 10),
+//       padding: const EdgeInsets.all(14),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(15),
+//       ),
+//       child: Row(
+//         children: [
+//           Text(
+//             number,
+//             style: TextStyle(
+//               color: Colors.grey.shade400,
+//               fontWeight: FontWeight.bold,
+//               fontSize: 16,
+//             ),
+//           ),
+
+//           const SizedBox(width: 15),
+
+//           Container(
+//             padding: const EdgeInsets.all(10),
+//             decoration: BoxDecoration(
+//               color: Colors.blue.shade50,
+//               shape: BoxShape.circle,
+//             ),
+//             child: Icon(
+//               icon,
+//               color: Colors.blue,
+//               size: 20,
+//             ),
+//           ),
+
+//           const SizedBox(width: 14),
+
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   title,
+//                   style: const TextStyle(
+//                     fontWeight: FontWeight.w600,
+//                     fontSize: 14,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                 Text(
+//                   category,
+//                   style: TextStyle(
+//                     color: Colors.grey.shade600,
+//                     fontSize: 12,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+
+//           const Icon(
+//             Icons.arrow_forward_ios,
+//             size: 15,
+//             color: Colors.grey,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // =====================================================
+//   // RECENTLY VIEWED
+//   // =====================================================
+
+//   Widget _recentItem({
+//     required IconData icon,
+//     required String title,
+//     required String subtitle,
+//   }) {
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 10),
+//       padding: const EdgeInsets.all(14),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(15),
+//       ),
+//       child: Row(
+//         children: [
+//           Container(
+//             padding: const EdgeInsets.all(11),
+//             decoration: BoxDecoration(
+//               color: Colors.grey.shade100,
+//               borderRadius: BorderRadius.circular(12),
+//             ),
+//             child: Icon(
+//               icon,
+//               color: Colors.blueGrey,
+//             ),
+//           ),
+
+//           const SizedBox(width: 14),
+
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   title,
+//                   style: const TextStyle(
+//                     fontWeight: FontWeight.w600,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                 Text(
+//                   subtitle,
+//                   style: TextStyle(
+//                     color: Colors.grey.shade600,
+//                     fontSize: 12,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+
+//           const Icon(
+//             Icons.arrow_forward_ios,
+//             size: 14,
+//             color: Colors.grey,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // =====================================================
+//   // LEARNING CARD
+//   // =====================================================
+
+//   Widget _learningCard({
+//     required IconData icon,
+//     required String title,
+//     required String subtitle,
+//   }) {
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 10),
+//       padding: const EdgeInsets.all(15),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(15),
+//       ),
+//       child: Row(
+//         children: [
+//           Container(
+//             padding: const EdgeInsets.all(12),
+//             decoration: BoxDecoration(
+//               color: Colors.blue.shade50,
+//               borderRadius: BorderRadius.circular(12),
+//             ),
+//             child: Icon(
+//               icon,
+//               color: Colors.blue,
+//               size: 25,
+//             ),
+//           ),
+
+//           const SizedBox(width: 14),
+
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   title,
+//                   style: const TextStyle(
+//                     fontWeight: FontWeight.w600,
+//                     fontSize: 14,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 5),
+//                 Text(
+//                   subtitle,
+//                   style: TextStyle(
+//                     color: Colors.grey.shade600,
+//                     fontSize: 12,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+
+//           const Icon(
+//             Icons.arrow_forward_ios,
+//             size: 14,
+//             color: Colors.grey,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+
+
+
+
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import './graduate_sidebar.dart';
 
 class GraduateHomePage extends StatefulWidget {
@@ -574,6 +1375,231 @@ class GraduateHomePage extends StatefulWidget {
 }
 
 class _GraduateHomePageState extends State<GraduateHomePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // =====================================================
+  // DYNAMIC COUNTS
+  // =====================================================
+
+  int quizAttemptCount = 0;
+  int savedCareerCount = 0;
+  int totalCareerCount = 0;
+
+  bool isLoadingStats = true;
+
+  // =====================================================
+  // INIT
+  // =====================================================
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDashboardData();
+  }
+
+  // =====================================================
+  // LOAD ALL DASHBOARD DATA
+  // =====================================================
+
+  Future<void> _loadDashboardData() async {
+    final User? user = _auth.currentUser;
+
+    if (user == null) {
+      if (mounted) {
+        setState(() {
+          isLoadingStats = false;
+        });
+      }
+      return;
+    }
+
+    try {
+      // -------------------------------------------------
+      // 1. LOAD PROFILE
+      // -------------------------------------------------
+
+      final DocumentSnapshot<Map<String, dynamic>> profileSnapshot =
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      final Map<String, dynamic>? profileData = profileSnapshot.data();
+
+      // -------------------------------------------------
+      // 2. GET INTERESTED FIELDS
+      // -------------------------------------------------
+
+      List<String> interestedFields = [];
+
+      if (profileData != null) {
+        // Supports:
+        // interestedFields: ["Technology", "Medical"]
+        //
+        // OR:
+        // interestedField: "Technology"
+
+        final dynamic fields = profileData['interestedFields'];
+
+        if (fields is List) {
+          interestedFields = fields
+              .map(
+                (e) => e.toString().trim().toLowerCase(),
+              )
+              .where((e) => e.isNotEmpty)
+              .toList();
+        }
+
+        final dynamic singleField = profileData['interestedField'];
+
+        if (singleField is String &&
+            singleField.trim().isNotEmpty) {
+          interestedFields.add(
+            singleField.trim().toLowerCase(),
+          );
+        }
+      }
+
+      // Remove duplicate interests
+      interestedFields = interestedFields.toSet().toList();
+
+      // -------------------------------------------------
+      // 3. QUIZ ATTEMPTS
+      // -------------------------------------------------
+
+      final QuerySnapshot<Map<String, dynamic>> quizSnapshot =
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('quizAttempts')
+              .get();
+
+      final int fetchedQuizAttempts =
+          quizSnapshot.docs.length;
+
+      // -------------------------------------------------
+      // 4. SAVED CAREERS
+      // -------------------------------------------------
+
+      final QuerySnapshot<Map<String, dynamic>> savedSnapshot =
+          await _firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('savedCareers')
+              .get();
+
+      final int fetchedSavedCareers =
+          savedSnapshot.docs.length;
+
+      // -------------------------------------------------
+      // 5. CAREER BANK
+      // -------------------------------------------------
+
+      final QuerySnapshot<Map<String, dynamic>> careerSnapshot =
+          await _firestore
+              .collection('career_bank')
+              .get();
+
+      int fetchedTotalCareers = 0;
+
+      // -------------------------------------------------
+      // FILTER CAREERS ACCORDING TO INTEREST
+      // -------------------------------------------------
+
+      for (final doc in careerSnapshot.docs) {
+        final data = doc.data();
+
+        // Career category
+        final dynamic categoryValue = data['category'];
+
+        if (interestedFields.isEmpty) {
+          // If user has no interest selected,
+          // don't show any filtered count.
+          fetchedTotalCareers = 0;
+          break;
+        }
+
+        bool matchesInterest = false;
+
+        // -------------------------------------------------
+        // CATEGORY IS STRING
+        // -------------------------------------------------
+
+        if (categoryValue is String) {
+          final String category =
+              categoryValue.trim().toLowerCase();
+
+          if (interestedFields.contains(category)) {
+            matchesInterest = true;
+          }
+        }
+
+        // -------------------------------------------------
+        // CATEGORY IS LIST
+        // -------------------------------------------------
+
+        if (categoryValue is List) {
+          final List<String> categories = categoryValue
+              .map(
+                (e) => e.toString().trim().toLowerCase(),
+              )
+              .toList();
+
+          for (final interest in interestedFields) {
+            if (categories.contains(interest)) {
+              matchesInterest = true;
+              break;
+            }
+          }
+        }
+
+        if (matchesInterest) {
+          fetchedTotalCareers++;
+        }
+      }
+
+      // -------------------------------------------------
+      // UPDATE UI
+      // -------------------------------------------------
+
+      if (!mounted) return;
+
+      setState(() {
+        quizAttemptCount = fetchedQuizAttempts;
+        savedCareerCount = fetchedSavedCareers;
+        totalCareerCount = fetchedTotalCareers;
+        isLoadingStats = false;
+      });
+    } catch (e) {
+      debugPrint(
+        'Error loading graduate dashboard data: $e',
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        isLoadingStats = false;
+      });
+    }
+  }
+
+  // =====================================================
+  // REFRESH
+  // =====================================================
+
+  Future<void> _refreshDashboard() async {
+    setState(() {
+      isLoadingStats = true;
+    });
+
+    await _loadDashboardData();
+  }
+
+  // =====================================================
+  // BUILD
+  // =====================================================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -582,7 +1608,9 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
+        iconTheme: const IconThemeData(
+          color: Colors.black87,
+        ),
         title: const Text(
           'PathSeeker',
           style: TextStyle(
@@ -592,231 +1620,416 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_none),
+            onPressed: _refreshDashboard,
+            icon: const Icon(Icons.refresh),
           ),
+
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.notifications_none,
+            ),
+          ),
+
           const SizedBox(width: 8),
         ],
       ),
 
-      // Separate sidebar
       drawer: GraduateSidebar(
         onItemSelected: (index) {
           Navigator.pop(context);
 
-          // Navigation will be connected later.
-          debugPrint('Sidebar item: $index');
+          debugPrint(
+            'Sidebar item: $index',
+          );
         },
       ),
 
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        child: RefreshIndicator(
+          onRefresh: _refreshDashboard,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              children: [
 
-              // ==========================================
-              // WELCOME SECTION
-              // ==========================================
+                // ==========================================
+                // WELCOME
+                // ==========================================
 
-              const Text(
-                'Good Morning, Graduate 👋',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF172033),
+                const Text(
+                  'Good Morning, Graduate 👋',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF172033),
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 6),
+                const SizedBox(height: 6),
 
-              Text(
-                'Continue your career journey and discover opportunities that match your skills.',
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.5,
-                  color: Colors.grey.shade600,
+                Text(
+                  'Continue your career journey and discover opportunities that match your skills.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.5,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              // ==========================================
-              // PROFILE COMPLETION
-              // ==========================================
+                // ==========================================
+                // DASHBOARD STATS
+                // ==========================================
 
-              _sectionTitle('Profile Progress'),
-
-              const SizedBox(height: 12),
-
-              _profileProgressCard(),
-
-              const SizedBox(height: 24),
-
-              // ==========================================
-              // CAREER ASSESSMENT
-              // ==========================================
-
-              _sectionTitle('Career Assessment'),
-
-              const SizedBox(height: 12),
-
-              _careerAssessmentCard(),
-
-              const SizedBox(height: 28),
-
-              // ==========================================
-              // TOP PICKS
-              // ==========================================
-
-              _sectionTitle(
-                'Top Picks For You',
-                actionText: 'View All',
-                onAction: () {},
-              ),
-
-              const SizedBox(height: 12),
-
-              SizedBox(
-                height: 190,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _careerCard(
-                      icon: Icons.code,
-                      title: 'Software Engineer',
-                      category: 'Technology',
-                      match: '88%',
-                    ),
-
-                    _careerCard(
-                      icon: Icons.analytics_outlined,
-                      title: 'Data Scientist',
-                      category: 'Technology',
-                      match: '83%',
-                    ),
-
-                    _careerCard(
-                      icon: Icons.security_outlined,
-                      title: 'Cyber Security',
-                      category: 'Technology',
-                      match: '78%',
-                    ),
-                  ],
+                _sectionTitle(
+                  'Your Progress',
                 ),
-              ),
 
-              const SizedBox(height: 28),
+                const SizedBox(height: 12),
 
-              // ==========================================
-              // TRENDING CAREERS
-              // ==========================================
+                _statsGrid(),
 
-              _sectionTitle(
-                'Trending Careers',
-                actionText: 'Explore',
-                onAction: () {},
-              ),
+                const SizedBox(height: 24),
 
-              const SizedBox(height: 12),
+                // ==========================================
+                // PROFILE PROGRESS
+                // ==========================================
 
-              _trendingCareer(
-                number: '01',
-                title: 'AI / Machine Learning Engineer',
-                category: 'Technology',
-                icon: Icons.smart_toy_outlined,
-              ),
+                _sectionTitle(
+                  'Profile Progress',
+                ),
 
-              _trendingCareer(
-                number: '02',
-                title: 'Cloud Engineer',
-                category: 'Technology',
-                icon: Icons.cloud_outlined,
-              ),
+                const SizedBox(height: 12),
 
-              _trendingCareer(
-                number: '03',
-                title: 'Data Scientist',
-                category: 'Technology',
-                icon: Icons.bar_chart_outlined,
-              ),
+                _profileProgressCard(),
 
-              _trendingCareer(
-                number: '04',
-                title: 'Cyber Security Analyst',
-                category: 'Technology',
-                icon: Icons.shield_outlined,
-              ),
+                const SizedBox(height: 24),
 
-              const SizedBox(height: 28),
+                // ==========================================
+                // CAREER ASSESSMENT
+                // ==========================================
 
-              // ==========================================
-              // RECENTLY VIEWED
-              // ==========================================
+                _sectionTitle(
+                  'Career Assessment',
+                ),
 
-              _sectionTitle(
-                'Recently Viewed',
-                actionText: 'View All',
-                onAction: () {},
-              ),
+                const SizedBox(height: 12),
 
-              const SizedBox(height: 12),
+                _careerAssessmentCard(),
 
-              _recentItem(
-                icon: Icons.code,
-                title: 'Software Engineer',
-                subtitle: 'Technology',
-              ),
+                const SizedBox(height: 28),
 
-              _recentItem(
-                icon: Icons.data_object,
-                title: 'Data Scientist',
-                subtitle: 'Technology',
-              ),
+                // ==========================================
+                // TOP PICKS
+                // ==========================================
 
-              _recentItem(
-                icon: Icons.security,
-                title: 'Cyber Security Analyst',
-                subtitle: 'Technology',
-              ),
+                _sectionTitle(
+                  'Top Picks For You',
+                  actionText: 'View All',
+                  onAction: () {},
+                ),
 
-              const SizedBox(height: 28),
+                const SizedBox(height: 12),
 
-              // ==========================================
-              // RECOMMENDED LEARNING
-              // ==========================================
+                SizedBox(
+                  height: 190,
+                  child: ListView(
+                    scrollDirection:
+                        Axis.horizontal,
+                    children: [
+                      _careerCard(
+                        icon: Icons.code,
+                        title: 'Software Engineer',
+                        category: 'Technology',
+                        match: '88%',
+                      ),
 
-              _sectionTitle(
-                'Recommended Learning',
-                actionText: 'View All',
-                onAction: () {},
-              ),
+                      _careerCard(
+                        icon:
+                            Icons.analytics_outlined,
+                        title: 'Data Scientist',
+                        category: 'Technology',
+                        match: '83%',
+                      ),
 
-              const SizedBox(height: 12),
+                      _careerCard(
+                        icon:
+                            Icons.security_outlined,
+                        title: 'Cyber Security',
+                        category: 'Technology',
+                        match: '78%',
+                      ),
+                    ],
+                  ),
+                ),
 
-              _learningCard(
-                icon: Icons.play_circle_outline,
-                title: 'Introduction to Data Science',
-                subtitle: 'Video • 12 min',
-              ),
+                const SizedBox(height: 28),
 
-              _learningCard(
-                icon: Icons.picture_as_pdf_outlined,
-                title: 'Roadmap to Software Engineering',
-                subtitle: 'PDF • Beginner',
-              ),
+                // ==========================================
+                // TRENDING CAREERS
+                // ==========================================
 
-              _learningCard(
-                icon: Icons.play_circle_outline,
-                title: 'Cyber Security Fundamentals',
-                subtitle: 'Video • 18 min',
-              ),
+                _sectionTitle(
+                  'Trending Careers',
+                  actionText: 'Explore',
+                  onAction: () {},
+                ),
 
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 12),
+
+                _trendingCareer(
+                  number: '01',
+                  title:
+                      'AI / Machine Learning Engineer',
+                  category: 'Technology',
+                  icon:
+                      Icons.smart_toy_outlined,
+                ),
+
+                _trendingCareer(
+                  number: '02',
+                  title: 'Cloud Engineer',
+                  category: 'Technology',
+                  icon: Icons.cloud_outlined,
+                ),
+
+                _trendingCareer(
+                  number: '03',
+                  title: 'Data Scientist',
+                  category: 'Technology',
+                  icon: Icons.bar_chart_outlined,
+                ),
+
+                _trendingCareer(
+                  number: '04',
+                  title:
+                      'Cyber Security Analyst',
+                  category: 'Technology',
+                  icon: Icons.shield_outlined,
+                ),
+
+                const SizedBox(height: 28),
+
+                // ==========================================
+                // RECENTLY VIEWED
+                // ==========================================
+
+                _sectionTitle(
+                  'Recently Viewed',
+                  actionText: 'View All',
+                  onAction: () {},
+                ),
+
+                const SizedBox(height: 12),
+
+                _recentItem(
+                  icon: Icons.code,
+                  title: 'Software Engineer',
+                  subtitle: 'Technology',
+                ),
+
+                _recentItem(
+                  icon: Icons.data_object,
+                  title: 'Data Scientist',
+                  subtitle: 'Technology',
+                ),
+
+                _recentItem(
+                  icon: Icons.security,
+                  title:
+                      'Cyber Security Analyst',
+                  subtitle: 'Technology',
+                ),
+
+                const SizedBox(height: 28),
+
+                // ==========================================
+                // RECOMMENDED LEARNING
+                // ==========================================
+
+                _sectionTitle(
+                  'Recommended Learning',
+                  actionText: 'View All',
+                  onAction: () {},
+                ),
+
+                const SizedBox(height: 12),
+
+                _learningCard(
+                  icon:
+                      Icons.play_circle_outline,
+                  title:
+                      'Introduction to Data Science',
+                  subtitle: 'Video • 12 min',
+                ),
+
+                _learningCard(
+                  icon:
+                      Icons.picture_as_pdf_outlined,
+                  title:
+                      'Roadmap to Software Engineering',
+                  subtitle: 'PDF • Beginner',
+                ),
+
+                _learningCard(
+                  icon:
+                      Icons.play_circle_outline,
+                  title:
+                      'Cyber Security Fundamentals',
+                  subtitle: 'Video • 18 min',
+                ),
+
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  // =====================================================
+  // STATS GRID
+  // =====================================================
+
+  Widget _statsGrid() {
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      shrinkWrap: true,
+      physics:
+          const NeverScrollableScrollPhysics(),
+      childAspectRatio: 1.65,
+      children: [
+        _statCard(
+          icon: Icons.quiz_outlined,
+          title: 'Quiz Attempts',
+          value: quizAttemptCount.toString(),
+          iconColor: Colors.blue,
+        ),
+
+        _statCard(
+          icon: Icons.work_outline,
+          title: 'Career Matches',
+          value: totalCareerCount.toString(),
+          iconColor: Colors.deepPurple,
+        ),
+
+        _statCard(
+          icon: Icons.bookmark_outline,
+          title: 'Saved Careers',
+          value: savedCareerCount.toString(),
+          iconColor: Colors.orange,
+        ),
+
+        _statCard(
+          icon: Icons.explore_outlined,
+          title: 'Career Bank',
+          value: totalCareerCount.toString(),
+          iconColor: Colors.green,
+        ),
+      ],
+    );
+  }
+
+  // =====================================================
+  // STAT CARD
+  // =====================================================
+
+  Widget _statCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color iconColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius:
+            BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color:
+                Colors.black.withOpacity(0.035),
+            blurRadius: 12,
+            offset:
+                const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding:
+                const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color:
+                  iconColor.withOpacity(0.10),
+              borderRadius:
+                  BorderRadius.circular(12),
+            ),
+            child: Icon(
+              icon,
+              color: iconColor,
+              size: 23,
+            ),
+          ),
+
+          const SizedBox(width: 11),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+              mainAxisAlignment:
+                  MainAxisAlignment.center,
+              children: [
+                if (isLoadingStats)
+                  Container(
+                    width: 35,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius:
+                          BorderRadius.circular(5),
+                    ),
+                  )
+                else
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight:
+                          FontWeight.bold,
+                      color:
+                          Color(0xFF172033),
+                    ),
+                  ),
+
+                const SizedBox(height: 3),
+
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow:
+                      TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color:
+                        Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -831,7 +2044,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
     VoidCallback? onAction,
   }) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment:
+          MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
@@ -848,7 +2062,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
             child: Text(
               actionText,
               style: const TextStyle(
-                fontWeight: FontWeight.w600,
+                fontWeight:
+                    FontWeight.w600,
               ),
             ),
           ),
@@ -857,7 +2072,7 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
   }
 
   // =====================================================
-  // PROFILE PROGRESS CARD
+  // PROFILE PROGRESS
   // =====================================================
 
   Widget _profileProgressCard() {
@@ -866,12 +2081,15 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius:
+            BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color:
+                Colors.black.withOpacity(0.04),
             blurRadius: 15,
-            offset: const Offset(0, 5),
+            offset:
+                const Offset(0, 5),
           ),
         ],
       ),
@@ -883,18 +2101,22 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
                 height: 70,
                 width: 70,
                 child: Stack(
-                  alignment: Alignment.center,
+                  alignment:
+                      Alignment.center,
                   children: [
                     CircularProgressIndicator(
                       value: 0.80,
                       strokeWidth: 7,
-                      backgroundColor: Colors.grey.shade200,
+                      backgroundColor:
+                          Colors.grey.shade200,
                       color: Colors.blue,
                     ),
+
                     const Text(
                       '80%',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight:
+                            FontWeight.bold,
                       ),
                     ),
                   ],
@@ -905,16 +2127,20 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
 
               const Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Complete your profile',
                       style: TextStyle(
                         fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                        fontWeight:
+                            FontWeight.bold,
                       ),
                     ),
+
                     SizedBox(height: 6),
+
                     Text(
                       'A complete profile helps us provide better career recommendations.',
                       style: TextStyle(
@@ -933,10 +2159,22 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
 
           Row(
             children: [
-              _checkItem('Education', true),
-              _checkItem('Skills', true),
-              _checkItem('Interests', true),
-              _checkItem('Resume', false),
+              _checkItem(
+                'Education',
+                true,
+              ),
+              _checkItem(
+                'Skills',
+                true,
+              ),
+              _checkItem(
+                'Interests',
+                true,
+              ),
+              _checkItem(
+                'Resume',
+                false,
+              ),
             ],
           ),
 
@@ -946,7 +2184,9 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () {},
-              child: const Text('Complete Profile'),
+              child: const Text(
+                'Complete Profile',
+              ),
             ),
           ),
         ],
@@ -954,7 +2194,10 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
     );
   }
 
-  Widget _checkItem(String title, bool completed) {
+  Widget _checkItem(
+    String title,
+    bool completed,
+  ) {
     return Expanded(
       child: Row(
         children: [
@@ -963,16 +2206,22 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
                 ? Icons.check_circle
                 : Icons.radio_button_unchecked,
             size: 16,
-            color: completed ? Colors.green : Colors.grey,
+            color: completed
+                ? Colors.green
+                : Colors.grey,
           ),
+
           const SizedBox(width: 4),
+
           Flexible(
             child: Text(
               title,
-              style: const TextStyle(
+              style:
+                  const TextStyle(
                 fontSize: 11,
               ),
-              overflow: TextOverflow.ellipsis,
+              overflow:
+                  TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -995,10 +2244,12 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
             Color(0xFF4F46E5),
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius:
+            BorderRadius.circular(20),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
         children: [
           const Icon(
             Icons.psychology_outlined,
@@ -1013,7 +2264,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 21,
-              fontWeight: FontWeight.bold,
+              fontWeight:
+                  FontWeight.bold,
             ),
           ),
 
@@ -1032,10 +2284,14 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
 
           ElevatedButton(
             onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(
+            style:
+                ElevatedButton.styleFrom(
+              backgroundColor:
+                  Colors.white,
+              foregroundColor:
+                  Colors.blue,
+              padding:
+                  const EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 12,
               ),
@@ -1043,7 +2299,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
             child: const Text(
               'Take Career Quiz',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight:
+                    FontWeight.bold,
               ),
             ),
           ),
@@ -1064,25 +2321,30 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
   }) {
     return Container(
       width: 220,
-      margin: const EdgeInsets.only(right: 14),
+      margin:
+          const EdgeInsets.only(right: 14),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius:
+            BorderRadius.circular(18),
         border: Border.all(
           color: Colors.grey.shade200,
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding:
+                    const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
@@ -1093,20 +2355,24 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
               const Spacer(),
 
               Container(
-                padding: const EdgeInsets.symmetric(
+                padding:
+                    const EdgeInsets.symmetric(
                   horizontal: 8,
                   vertical: 5,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.green.shade50,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius:
+                      BorderRadius.circular(20),
                 ),
                 child: Text(
                   '$match Match',
                   style: TextStyle(
-                    color: Colors.green.shade700,
+                    color:
+                        Colors.green.shade700,
                     fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                    fontWeight:
+                        FontWeight.bold,
                   ),
                 ),
               ),
@@ -1119,7 +2385,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
             title,
             style: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight:
+                  FontWeight.bold,
             ),
           ),
 
@@ -1128,7 +2395,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
           Text(
             category,
             style: TextStyle(
-              color: Colors.grey.shade600,
+              color:
+                  Colors.grey.shade600,
               fontSize: 12,
             ),
           ),
@@ -1140,7 +2408,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
             style: TextStyle(
               color: Colors.blue,
               fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontWeight:
+                  FontWeight.w600,
             ),
           ),
         ],
@@ -1159,19 +2428,23 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
     required IconData icon,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin:
+          const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius:
+            BorderRadius.circular(15),
       ),
       child: Row(
         children: [
           Text(
             number,
             style: TextStyle(
-              color: Colors.grey.shade400,
-              fontWeight: FontWeight.bold,
+              color:
+                  Colors.grey.shade400,
+              fontWeight:
+                  FontWeight.bold,
               fontSize: 16,
             ),
           ),
@@ -1179,7 +2452,8 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
           const SizedBox(width: 15),
 
           Container(
-            padding: const EdgeInsets.all(10),
+            padding:
+                const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.blue.shade50,
               shape: BoxShape.circle,
@@ -1195,20 +2469,26 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
 
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+                  style:
+                      const TextStyle(
+                    fontWeight:
+                        FontWeight.w600,
                     fontSize: 14,
                   ),
                 ),
+
                 const SizedBox(height: 4),
+
                 Text(
                   category,
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color:
+                        Colors.grey.shade600,
                     fontSize: 12,
                   ),
                 ),
@@ -1236,19 +2516,24 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
     required String subtitle,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin:
+          const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius:
+            BorderRadius.circular(15),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(11),
+            padding:
+                const EdgeInsets.all(11),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(12),
+              color:
+                  Colors.grey.shade100,
+              borderRadius:
+                  BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
@@ -1260,19 +2545,25 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
 
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+                  style:
+                      const TextStyle(
+                    fontWeight:
+                        FontWeight.w600,
                   ),
                 ),
+
                 const SizedBox(height: 4),
+
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color:
+                        Colors.grey.shade600,
                     fontSize: 12,
                   ),
                 ),
@@ -1300,19 +2591,23 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
     required String subtitle,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin:
+          const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius:
+            BorderRadius.circular(15),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding:
+                const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius:
+                  BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
@@ -1325,20 +2620,26 @@ class _GraduateHomePageState extends State<GraduateHomePage> {
 
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+                  style:
+                      const TextStyle(
+                    fontWeight:
+                        FontWeight.w600,
                     fontSize: 14,
                   ),
                 ),
+
                 const SizedBox(height: 5),
+
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: Colors.grey.shade600,
+                    color:
+                        Colors.grey.shade600,
                     fontSize: 12,
                   ),
                 ),
