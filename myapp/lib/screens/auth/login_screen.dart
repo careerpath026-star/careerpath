@@ -96,7 +96,7 @@ if (userType == 'professional') {
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(
-      builder: (_) => const ProfessionalDashboard(),
+      builder: (_) => const PersonalizedDashboardPage(userId: '1',),
     ),
   );
 } else if (userType == 'graduate') {

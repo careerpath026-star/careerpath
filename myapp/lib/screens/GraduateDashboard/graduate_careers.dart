@@ -2601,6 +2601,1751 @@
 
 
 
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+
+// class GraduateCareerBank extends StatefulWidget {
+//   const GraduateCareerBank({super.key});
+
+//   @override
+//   State<GraduateCareerBank> createState() => _GraduateCareerBankState();
+// }
+
+// class _GraduateCareerBankState extends State<GraduateCareerBank> {
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
+//   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+//   bool isLoading = true;
+
+//   String userName = "Graduate";
+
+//   // User's selected interest field(s)
+//   List<String> userInterestFields = [];
+
+//   List<Map<String, dynamic>> careers = [];
+
+//   // ==========================================================
+//   // INIT
+//   // ==========================================================
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     loadCareerBank();
+//   }
+
+//   // ==========================================================
+//   // LOAD CAREER BANK
+//   // ==========================================================
+
+//   Future<void> loadCareerBank() async {
+//     try {
+//       if (mounted) {
+//         setState(() {
+//           isLoading = true;
+//         });
+//       }
+
+//       final User? user = _auth.currentUser;
+
+//       if (user == null) {
+//         if (!mounted) return;
+
+//         setState(() {
+//           isLoading = false;
+//           careers = [];
+//         });
+
+//         return;
+//       }
+
+//       // ========================================================
+//       // GET USER PROFILE
+//       // ========================================================
+
+//       final userSnapshot = await _firestore
+//           .collection("users")
+//           .doc(user.uid)
+//           .get();
+
+//       if (!userSnapshot.exists) {
+//         if (!mounted) return;
+
+//         setState(() {
+//           isLoading = false;
+//           careers = [];
+//           userInterestFields = [];
+//         });
+
+//         return;
+//       }
+
+//       final Map<String, dynamic> userData =
+//           userSnapshot.data() as Map<String, dynamic>;
+
+//       // ========================================================
+//       // GET USER NAME
+//       // ========================================================
+
+//       userName =
+//           userData["name"]?.toString().trim().isNotEmpty == true
+//               ? userData["name"].toString().trim()
+//               : userData["fullName"]?.toString().trim().isNotEmpty == true
+//                   ? userData["fullName"].toString().trim()
+//                   : "Graduate";
+
+//       // ========================================================
+//       // GET USER INTEREST FIELD
+//       // ========================================================
+//       //
+//       // Firestore field:
+//       //
+//       //     instrest_field
+//       //
+//       // It can be:
+//       //
+//       // String:
+//       // "Computer Science"
+//       //
+//       // OR List:
+//       // ["Computer Science", "Engineering"]
+//       //
+//       // ========================================================
+
+//       userInterestFields = _getUserInterestFields(
+//         userData["interest_field"],
+//       );
+
+//       debugPrint(
+//         "User Interest Fields: $userInterestFields",
+//       );
+
+//       // ========================================================
+//       // FETCH CAREER BANK
+//       // ========================================================
+
+//       final QuerySnapshot careerSnapshot =
+//           await _firestore.collection("careerBank").get();
+
+//       final List<Map<String, dynamic>> loadedCareers = [];
+
+//       // ========================================================
+//       // FILTER CAREERS BY USER INTEREST
+//       // ========================================================
+
+//       for (final doc in careerSnapshot.docs) {
+//         final Map<String, dynamic> data =
+//             doc.data() as Map<String, dynamic>;
+
+//         final String careerCategory =
+//             _normalizeCategory(data["category"]);
+
+//         // Skip career if category is missing
+//         if (careerCategory.isEmpty) {
+//           continue;
+//         }
+
+//         // Check whether career category matches
+//         // any user interest category.
+//         final bool isMatching =
+//             userInterestFields.any(
+//           (interest) {
+//             final String normalizedInterest =
+//                 _normalizeCategory(interest);
+
+//             return normalizedInterest.isNotEmpty &&
+//                 normalizedInterest == careerCategory;
+//           },
+//         );
+
+//         // ONLY ADD MATCHING CAREERS
+//         if (isMatching) {
+//           loadedCareers.add({
+//             "id": doc.id,
+//             ...data,
+//           });
+//         }
+//       }
+
+//       // ========================================================
+//       // SORT CAREERS
+//       // ========================================================
+
+//       loadedCareers.sort(
+//         (a, b) {
+//           final String nameA =
+//               _getCareerName(a).toLowerCase();
+
+//           final String nameB =
+//               _getCareerName(b).toLowerCase();
+
+//           return nameA.compareTo(nameB);
+//         },
+//       );
+
+//       if (!mounted) return;
+
+//       setState(() {
+//         careers = loadedCareers;
+//         isLoading = false;
+//       });
+
+//       // ========================================================
+//       // LOAD SAVED STATUS
+//       // ========================================================
+
+//       await loadSavedStatus();
+//     } catch (e) {
+//       debugPrint(
+//         "Career Bank Error: $e",
+//       );
+
+//       if (!mounted) return;
+
+//       setState(() {
+//         isLoading = false;
+//         careers = [];
+//       });
+
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text(
+//             "Unable to load career bank.",
+//           ),
+//         ),
+//       );
+//     }
+//   }
+
+//   // ==========================================================
+//   // GET USER INTEREST FIELDS
+//   // ==========================================================
+
+//   List<String> _getUserInterestFields(
+//     dynamic value,
+//   ) {
+//     if (value == null) {
+//       return [];
+//     }
+
+//     // If Firestore contains an array
+//     if (value is List) {
+//       return value
+//           .map(
+//             (item) => item.toString().trim(),
+//           )
+//           .where(
+//             (item) => item.isNotEmpty,
+//           )
+//           .toList();
+//     }
+
+//     // If Firestore contains a single string
+//     final String text = value.toString().trim();
+
+//     if (text.isEmpty) {
+//       return [];
+//     }
+
+//     return [text];
+//   }
+
+//   // ==========================================================
+//   // NORMALIZE CATEGORY
+//   // ==========================================================
+//   //
+//   // This makes different spellings equivalent.
+//   //
+//   // Computer
+//   // Computer Science
+//   // computerscience
+//   // computer_science
+//   //
+//   // ALL become:
+//   //
+//   // computerscience
+//   //
+//   // ==========================================================
+
+//   String _normalizeCategory(
+//     dynamic category,
+//   ) {
+//     if (category == null) {
+//       return "";
+//     }
+
+//     String value = category
+//         .toString()
+//         .trim()
+//         .toLowerCase();
+
+//     if (value.isEmpty) {
+//       return "";
+//     }
+
+//     // Remove spaces
+//     value = value.replaceAll(" ", "");
+
+//     // Remove underscore
+//     value = value.replaceAll("_", "");
+
+//     // Remove hyphen
+//     value = value.replaceAll("-", "");
+
+//     // ========================================================
+//     // COMPUTER SCIENCE
+//     // ========================================================
+
+//     if (value == "computer" ||
+//         value == "computerscience" ||
+//         value == "cs" ||
+//         value == "computertechnology" ||
+//         value == "computing") {
+//       return "computerscience";
+//     }
+
+//     // ========================================================
+//     // MEDICAL
+//     // ========================================================
+
+//     if (value == "medical" ||
+//         value == "healthcare" ||
+//         value == "medicalhealthcare" ||
+//         value == "medicine") {
+//       return "medical";
+//     }
+
+//     // ========================================================
+//     // ENGINEERING
+//     // ========================================================
+
+//     if (value == "engineering" ||
+//         value == "engineer") {
+//       return "engineering";
+//     }
+
+//     // Return unknown category as it is
+//     return value;
+//   }
+
+//   // ==========================================================
+//   // GET CAREER NAME
+//   // ==========================================================
+
+//   String _getCareerName(
+//     Map<String, dynamic> career,
+//   ) {
+//     final possibleNames = [
+//       "careerName",
+//       "career_name",
+//       "name",
+//       "title",
+//       "career",
+//     ];
+
+//     for (final key in possibleNames) {
+//       final value = career[key];
+
+//       if (value != null &&
+//           value.toString().trim().isNotEmpty) {
+//         return value.toString().trim();
+//       }
+//     }
+
+//     return "Career";
+//   }
+
+//   // ==========================================================
+//   // GET DESCRIPTION
+//   // ==========================================================
+
+//   String _getDescription(
+//     Map<String, dynamic> career,
+//   ) {
+//     final possibleKeys = [
+//       "description",
+//       "careerDescription",
+//       "career_description",
+//       "details",
+//       "about",
+//     ];
+
+//     for (final key in possibleKeys) {
+//       final value = career[key];
+
+//       if (value != null &&
+//           value.toString().trim().isNotEmpty) {
+//         return value.toString().trim();
+//       }
+//     }
+
+//     return "No description available.";
+//   }
+
+//   // ==========================================================
+//   // FORMAT VALUE
+//   // ==========================================================
+
+//   String _formatValue(
+//     dynamic value,
+//   ) {
+//     if (value == null) {
+//       return "Not added";
+//     }
+
+//     final String text =
+//         value.toString().trim();
+
+//     if (text.isEmpty) {
+//       return "Not added";
+//     }
+
+//     return text;
+//   }
+
+//   // ==========================================================
+//   // FORMAT CATEGORY
+//   // ==========================================================
+
+//   String formatCategory(
+//     dynamic category,
+//   ) {
+//     final String normalized =
+//         _normalizeCategory(category);
+
+//     switch (normalized) {
+//       case "computerscience":
+//         return "Computer Science";
+
+//       case "medical":
+//         return "Medical & Healthcare";
+
+//       case "engineering":
+//         return "Engineering";
+
+//       default:
+//         return _formatValue(category);
+//     }
+//   }
+
+//   // ==========================================================
+//   // CATEGORY ICON
+//   // ==========================================================
+
+//   IconData categoryIcon(
+//     dynamic category,
+//   ) {
+//     final String normalized =
+//         _normalizeCategory(category);
+
+//     switch (normalized) {
+//       case "computerscience":
+//         return Icons.computer_outlined;
+
+//       case "medical":
+//         return Icons.medical_services_outlined;
+
+//       case "engineering":
+//         return Icons.engineering_outlined;
+
+//       default:
+//         return Icons.work_outline;
+//     }
+//   }
+
+//   // ==========================================================
+//   // LOAD SAVED STATUS
+//   // ==========================================================
+
+//   Future<void> loadSavedStatus() async {
+//     final User? user =
+//         _auth.currentUser;
+
+//     if (user == null ||
+//         careers.isEmpty) {
+//       return;
+//     }
+
+//     try {
+//       final QuerySnapshot savedSnapshot =
+//           await _firestore
+//               .collection("users")
+//               .doc(user.uid)
+//               .collection("savedCareers")
+//               .get();
+
+//       final Set<String> savedIds =
+//           savedSnapshot.docs
+//               .map(
+//                 (doc) => doc.id,
+//               )
+//               .toSet();
+
+//       if (!mounted) return;
+
+//       setState(() {
+//         for (final career in careers) {
+//           career["_saved"] =
+//               savedIds.contains(
+//             career["id"].toString(),
+//           );
+//         }
+//       });
+//     } catch (e) {
+//       debugPrint(
+//         "Saved status error: $e",
+//       );
+//     }
+//   }
+
+//   // ==========================================================
+//   // SAVE / REMOVE CAREER
+//   // ==========================================================
+
+//   Future<void> toggleSaveCareer(
+//     Map<String, dynamic> career,
+//   ) async {
+//     final User? user =
+//         _auth.currentUser;
+
+//     if (user == null) {
+//       return;
+//     }
+
+//     final String careerId =
+//         career["id"]?.toString() ?? "";
+
+//     if (careerId.isEmpty) {
+//       return;
+//     }
+
+//     final DocumentReference savedRef =
+//         _firestore
+//             .collection("users")
+//             .doc(user.uid)
+//             .collection("savedCareers")
+//             .doc(careerId);
+
+//     try {
+//       final DocumentSnapshot savedSnapshot =
+//           await savedRef.get();
+
+//       // ========================================================
+//       // REMOVE
+//       // ========================================================
+
+//       if (savedSnapshot.exists) {
+//         await savedRef.delete();
+
+//         if (!mounted) return;
+
+//         setState(() {
+//           career["_saved"] = false;
+//         });
+
+//         ScaffoldMessenger.of(context)
+//             .showSnackBar(
+//           const SnackBar(
+//             content: Text(
+//               "Removed from saved careers.",
+//             ),
+//             duration:
+//                 Duration(seconds: 1),
+//           ),
+//         );
+//       }
+
+//       // ========================================================
+//       // SAVE
+//       // ========================================================
+
+//       else {
+//         await savedRef.set({
+//           "careerId": careerId,
+
+//           "careerName":
+//               _getCareerName(career),
+
+//           "description":
+//               _getDescription(career),
+
+//           // Save all career fields
+//           ...career,
+
+//           "savedAt":
+//               FieldValue.serverTimestamp(),
+//         });
+
+//         if (!mounted) return;
+
+//         setState(() {
+//           career["_saved"] = true;
+//         });
+
+//         ScaffoldMessenger.of(context)
+//             .showSnackBar(
+//           const SnackBar(
+//             content: Text(
+//               "Career saved successfully.",
+//             ),
+//             duration:
+//                 Duration(seconds: 1),
+//           ),
+//         );
+//       }
+//     } catch (e) {
+//       debugPrint(
+//         "Save career error: $e",
+//       );
+
+//       if (!mounted) return;
+
+//       ScaffoldMessenger.of(context)
+//           .showSnackBar(
+//         const SnackBar(
+//           content: Text(
+//             "Could not update saved career.",
+//           ),
+//         ),
+//       );
+//     }
+//   }
+
+//   // ==========================================================
+//   // BUILD
+//   // ==========================================================
+
+//   @override
+//   Widget build(
+//     BuildContext context,
+//   ) {
+//     return Scaffold(
+//       backgroundColor:
+//           const Color(0xFF0B1220),
+
+//       appBar: AppBar(
+//         backgroundColor:
+//             const Color(0xFF0B1220),
+
+//         elevation: 0,
+
+//         iconTheme:
+//             const IconThemeData(
+//           color: Colors.white,
+//         ),
+
+//         title: const Text(
+//           "Career Bank",
+//           style: TextStyle(
+//             color: Colors.white,
+//             fontWeight:
+//                 FontWeight.bold,
+//           ),
+//         ),
+//       ),
+
+//       body: isLoading
+//           ? const Center(
+//               child:
+//                   CircularProgressIndicator(
+//                 color:
+//                     Color(0xFF00C2FF),
+//               ),
+//             )
+//           : RefreshIndicator(
+//               color:
+//                   const Color(0xFF00C2FF),
+
+//               backgroundColor:
+//                   const Color(0xFF151F32),
+
+//               onRefresh:
+//                   loadCareerBank,
+
+//               child: careers.isEmpty
+//                   ? _emptyCareerBank()
+//                   : ListView(
+//                       physics:
+//                           const AlwaysScrollableScrollPhysics(),
+
+//                       padding:
+//                           const EdgeInsets.all(
+//                         18,
+//                       ),
+
+//                       children: [
+//                         _buildHeader(),
+
+//                         const SizedBox(
+//                           height: 20,
+//                         ),
+
+//                         ...careers.map(
+//                           (career) =>
+//                               _careerCard(
+//                             career,
+//                           ),
+//                         ),
+
+//                         const SizedBox(
+//                           height: 20,
+//                         ),
+//                       ],
+//                     ),
+//             ),
+//     );
+//   }
+
+//   // ==========================================================
+//   // HEADER
+//   // ==========================================================
+
+//   Widget _buildHeader() {
+//     return Container(
+//       width: double.infinity,
+
+//       padding:
+//           const EdgeInsets.all(22),
+
+//       decoration:
+//           BoxDecoration(
+//         gradient:
+//             const LinearGradient(
+//           colors: [
+//             Color(0xFF3654E0),
+//             Color(0xFF6278E8),
+//           ],
+
+//           begin:
+//               Alignment.topLeft,
+
+//           end:
+//               Alignment.bottomRight,
+//         ),
+
+//         borderRadius:
+//             BorderRadius.circular(
+//           22,
+//         ),
+//       ),
+
+//       child: Column(
+//         crossAxisAlignment:
+//             CrossAxisAlignment.start,
+
+//         children: [
+//           Container(
+//             height: 52,
+//             width: 52,
+
+//             decoration:
+//                 BoxDecoration(
+//               color: Colors.white
+//                   .withOpacity(0.16),
+
+//               borderRadius:
+//                   BorderRadius.circular(
+//                 15,
+//               ),
+//             ),
+
+//             child: const Icon(
+//               Icons.work_outline,
+//               color: Colors.white,
+//               size: 28,
+//             ),
+//           ),
+
+//           const SizedBox(
+//             height: 15,
+//           ),
+
+//           const Text(
+//             "Career Bank",
+//             style: TextStyle(
+//               color: Colors.white,
+//               fontSize: 24,
+//               fontWeight:
+//                   FontWeight.bold,
+//             ),
+//           ),
+
+//           const SizedBox(
+//             height: 6,
+//           ),
+
+//           Text(
+//             "Career opportunities based on your interests, requirements and career information.",
+//             style: const TextStyle(
+//               color: Colors.white70,
+//               fontSize: 13,
+//               height: 1.4,
+//             ),
+//           ),
+
+//           const SizedBox(
+//             height: 15,
+//           ),
+
+//           // ====================================================
+//           // USER INTEREST
+//           // ====================================================
+
+//           if (userInterestFields.isNotEmpty)
+//             Wrap(
+//               spacing: 8,
+//               runSpacing: 8,
+//               children:
+//                   userInterestFields.map(
+//                 (interest) {
+//                   return Container(
+//                     padding:
+//                         const EdgeInsets.symmetric(
+//                       horizontal: 12,
+//                       vertical: 7,
+//                     ),
+
+//                     decoration:
+//                         BoxDecoration(
+//                       color: Colors.white
+//                           .withOpacity(0.14),
+
+//                       borderRadius:
+//                           BorderRadius.circular(
+//                         20,
+//                       ),
+//                     ),
+
+//                     child: Text(
+//                       formatCategory(
+//                         interest,
+//                       ),
+//                       style:
+//                           const TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 12,
+//                         fontWeight:
+//                             FontWeight.bold,
+//                       ),
+//                     ),
+//                   );
+//                 },
+//               ).toList(),
+//             ),
+
+//           const SizedBox(
+//             height: 10,
+//           ),
+
+//           Container(
+//             padding:
+//                 const EdgeInsets.symmetric(
+//               horizontal: 12,
+//               vertical: 7,
+//             ),
+
+//             decoration:
+//                 BoxDecoration(
+//               color: Colors.white
+//                   .withOpacity(0.14),
+
+//               borderRadius:
+//                   BorderRadius.circular(
+//                 20,
+//               ),
+//             ),
+
+//             child: Text(
+//               "${careers.length} Matching Careers",
+//               style:
+//                   const TextStyle(
+//                 color: Colors.white,
+//                 fontSize: 12,
+//                 fontWeight:
+//                     FontWeight.bold,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // ==========================================================
+//   // CAREER CARD
+//   // ==========================================================
+
+//   Widget _careerCard(
+//     Map<String, dynamic> career,
+//   ) {
+//     final String careerName =
+//         _getCareerName(career);
+
+//     final String description =
+//         _getDescription(career);
+
+//     final String category =
+//         formatCategory(
+//       career["category"],
+//     );
+
+//     final String role =
+//         _formatValue(
+//       career["role"],
+//     );
+
+//     final bool saved =
+//         career["_saved"] == true;
+
+//     return Container(
+//       margin:
+//           const EdgeInsets.only(
+//         bottom: 14,
+//       ),
+
+//       decoration:
+//           BoxDecoration(
+//         color:
+//             const Color(0xFF151F32),
+
+//         borderRadius:
+//             BorderRadius.circular(
+//           18,
+//         ),
+
+//         border: Border.all(
+//           color: saved
+//               ? const Color(
+//                   0xFF00C2FF,
+//                 ).withOpacity(0.40)
+//               : Colors.white10,
+//         ),
+//       ),
+
+//       child: Padding(
+//         padding:
+//             const EdgeInsets.all(17),
+
+//         child: Column(
+//           crossAxisAlignment:
+//               CrossAxisAlignment.start,
+
+//           children: [
+//             // ==================================================
+//             // TOP ROW
+//             // ==================================================
+
+//             Row(
+//               crossAxisAlignment:
+//                   CrossAxisAlignment.start,
+
+//               children: [
+//                 Container(
+//                   height: 54,
+//                   width: 54,
+
+//                   decoration:
+//                       BoxDecoration(
+//                     color:
+//                         const Color(
+//                       0xFF00C2FF,
+//                     ).withOpacity(0.10),
+
+//                     borderRadius:
+//                         BorderRadius.circular(
+//                       14,
+//                     ),
+//                   ),
+
+//                   child: Icon(
+//                     categoryIcon(
+//                       career["category"],
+//                     ),
+
+//                     color:
+//                         const Color(
+//                       0xFF00C2FF,
+//                     ),
+
+//                     size: 28,
+//                   ),
+//                 ),
+
+//                 const SizedBox(
+//                   width: 13,
+//                 ),
+
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment:
+//                         CrossAxisAlignment.start,
+
+//                     children: [
+//                       Text(
+//                         careerName,
+
+//                         style:
+//                             const TextStyle(
+//                           color:
+//                               Colors.white,
+
+//                           fontSize:
+//                               17,
+
+//                           fontWeight:
+//                               FontWeight.bold,
+//                         ),
+//                       ),
+
+//                       const SizedBox(
+//                         height: 6,
+//                       ),
+
+//                       Text(
+//                         role ==
+//                                 "Not added"
+//                             ? "Career"
+//                             : role,
+
+//                         style:
+//                             const TextStyle(
+//                           color:
+//                               Color(
+//                             0xFF00C2FF,
+//                           ),
+
+//                           fontSize:
+//                               11,
+
+//                           fontWeight:
+//                               FontWeight.w600,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+
+//                 // =================================================
+//                 // BOOKMARK
+//                 // =================================================
+
+//                 IconButton(
+//                   tooltip: saved
+//                       ? "Remove saved career"
+//                       : "Save career",
+
+//                   onPressed: () {
+//                     toggleSaveCareer(
+//                       career,
+//                     );
+//                   },
+
+//                   icon: Icon(
+//                     saved
+//                         ? Icons.bookmark
+//                         : Icons.bookmark_border,
+
+//                     color: saved
+//                         ? const Color(
+//                             0xFF00C2FF,
+//                           )
+//                         : Colors.white54,
+
+//                     size: 28,
+//                   ),
+//                 ),
+//               ],
+//             ),
+
+//             const SizedBox(
+//               height: 15,
+//             ),
+
+//             // ==================================================
+//             // DESCRIPTION
+//             // ==================================================
+
+//             Text(
+//               description,
+
+//               maxLines: 4,
+
+//               overflow:
+//                   TextOverflow.ellipsis,
+
+//               style:
+//                   const TextStyle(
+//                 color:
+//                     Colors.white60,
+
+//                 fontSize:
+//                     13,
+
+//                 height:
+//                     1.5,
+//               ),
+//             ),
+
+//             const SizedBox(
+//               height: 15,
+//             ),
+
+//             // ==================================================
+//             // BASIC INFORMATION
+//             // ==================================================
+
+//             Wrap(
+//               spacing: 8,
+//               runSpacing: 8,
+
+//               children: [
+//                 _smallTag(
+//                   Icons.category_outlined,
+//                   category,
+//                 ),
+
+//                 _smallTag(
+//                   Icons.person_outline,
+//                   role,
+//                 ),
+
+//                 _smallTag(
+//                   Icons.school_outlined,
+//                   "Graduate",
+//                 ),
+//               ],
+//             ),
+
+//             const SizedBox(
+//               height: 14,
+//             ),
+
+//             // ==================================================
+//             // VIEW DETAILS
+//             // ==================================================
+
+//             Align(
+//               alignment:
+//                   Alignment.centerRight,
+
+//               child:
+//                   TextButton.icon(
+//                 onPressed: () {
+//                   _showCareerDetails(
+//                     career,
+//                   );
+//                 },
+
+//                 icon:
+//                     const Icon(
+//                   Icons.visibility_outlined,
+//                   color:
+//                       Color(0xFF00C2FF),
+//                   size: 16,
+//                 ),
+
+//                 label:
+//                     const Text(
+//                   "View All Fields",
+//                   style:
+//                       TextStyle(
+//                     color:
+//                         Color(
+//                       0xFF00C2FF,
+//                     ),
+
+//                     fontSize:
+//                         12,
+
+//                     fontWeight:
+//                         FontWeight.bold,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   // ==========================================================
+//   // SMALL TAG
+//   // ==========================================================
+
+//   Widget _smallTag(
+//     IconData icon,
+//     String text,
+//   ) {
+//     return Container(
+//       padding:
+//           const EdgeInsets.symmetric(
+//         horizontal: 9,
+//         vertical: 6,
+//       ),
+
+//       decoration:
+//           BoxDecoration(
+//         color: Colors.white
+//             .withOpacity(0.05),
+
+//         borderRadius:
+//             BorderRadius.circular(
+//           8,
+//         ),
+//       ),
+
+//       child: Row(
+//         mainAxisSize:
+//             MainAxisSize.min,
+
+//         children: [
+//           Icon(
+//             icon,
+//             color:
+//                 Colors.white38,
+//             size: 13,
+//           ),
+
+//           const SizedBox(
+//             width: 5,
+//           ),
+
+//           Text(
+//             text,
+
+//             style:
+//                 const TextStyle(
+//               color:
+//                   Colors.white54,
+
+//               fontSize:
+//                   10,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // ==========================================================
+//   // CAREER DETAILS
+//   // ==========================================================
+
+//   void _showCareerDetails(
+//     Map<String, dynamic> career,
+//   ) {
+//     final String careerName =
+//         _getCareerName(career);
+
+//     final bool saved =
+//         career["_saved"] == true;
+
+//     // Remove internal fields
+//     final Map<String, dynamic>
+//         displayFields = {};
+
+//     career.forEach(
+//       (key, value) {
+//         if (key != "id" &&
+//             key != "_saved" &&
+//             value != null) {
+//           displayFields[key] = value;
+//         }
+//       },
+//     );
+
+//     showModalBottomSheet(
+//       context: context,
+
+//       backgroundColor:
+//           const Color(0xFF151F32),
+
+//       isScrollControlled:
+//           true,
+
+//       shape:
+//           const RoundedRectangleBorder(
+//         borderRadius:
+//             BorderRadius.vertical(
+//           top: Radius.circular(25),
+//         ),
+//       ),
+
+//       builder:
+//           (bottomSheetContext) {
+//         return SafeArea(
+//           child:
+//               DraggableScrollableSheet(
+//             expand: false,
+
+//             initialChildSize:
+//                 0.80,
+
+//             minChildSize:
+//                 0.55,
+
+//             maxChildSize:
+//                 0.95,
+
+//             builder:
+//                 (
+//               context,
+//               scrollController,
+//             ) {
+//               return Column(
+//                 children: [
+//                   const SizedBox(
+//                     height: 10,
+//                   ),
+
+//                   Container(
+//                     height: 5,
+//                     width: 45,
+
+//                     decoration:
+//                         BoxDecoration(
+//                       color:
+//                           Colors.white24,
+
+//                       borderRadius:
+//                           BorderRadius.circular(
+//                         10,
+//                       ),
+//                     ),
+//                   ),
+
+//                   const SizedBox(
+//                     height: 18,
+//                   ),
+
+//                   // ============================================
+//                   // TITLE
+//                   // ============================================
+
+//                   Padding(
+//                     padding:
+//                         const EdgeInsets
+//                             .symmetric(
+//                       horizontal: 20,
+//                     ),
+
+//                     child: Row(
+//                       children: [
+//                         Expanded(
+//                           child: Text(
+//                             careerName,
+
+//                             style:
+//                                 const TextStyle(
+//                               color:
+//                                   Colors.white,
+
+//                               fontSize:
+//                                   22,
+
+//                               fontWeight:
+//                                   FontWeight.bold,
+//                             ),
+//                           ),
+//                         ),
+
+//                         IconButton(
+//                           tooltip: saved
+//                               ? "Remove from saved"
+//                               : "Save career",
+
+//                           onPressed: () {
+//                             toggleSaveCareer(
+//                               career,
+//                             );
+
+//                             Navigator.pop(
+//                               bottomSheetContext,
+//                             );
+//                           },
+
+//                           icon: Icon(
+//                             saved
+//                                 ? Icons.bookmark
+//                                 : Icons
+//                                     .bookmark_border,
+
+//                             color:
+//                                 const Color(
+//                               0xFF00C2FF,
+//                             ),
+
+//                             size: 29,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+
+//                   const SizedBox(
+//                     height: 5,
+//                   ),
+
+//                   Expanded(
+//                     child:
+//                         ListView(
+//                       controller:
+//                           scrollController,
+
+//                       padding:
+//                           const EdgeInsets
+//                               .fromLTRB(
+//                         20,
+//                         10,
+//                         20,
+//                         30,
+//                       ),
+
+//                       children: [
+//                         const Text(
+//                           "Career Information",
+
+//                           style:
+//                               TextStyle(
+//                             color:
+//                                 Colors.white,
+
+//                             fontSize:
+//                                 17,
+
+//                             fontWeight:
+//                                 FontWeight.bold,
+//                           ),
+//                         ),
+
+//                         const SizedBox(
+//                           height: 12,
+//                         ),
+
+//                         // ========================================
+//                         // SHOW EVERY FIELD
+//                         // ========================================
+
+//                         ...displayFields
+//                             .entries
+//                             .map(
+//                           (
+//                             entry,
+//                           ) {
+//                             return _detailField(
+//                               entry.key,
+//                               entry.value,
+//                             );
+//                           },
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               );
+//             },
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+//   // ==========================================================
+//   // DETAIL FIELD
+//   // ==========================================================
+
+//   Widget _detailField(
+//     String key,
+//     dynamic value,
+//   ) {
+//     final String title =
+//         _prettyFieldName(key);
+
+//     String text;
+
+//     if (value is List) {
+//       text = value.join(", ");
+//     } else if (value is Map) {
+//       text = value.entries
+//           .map(
+//             (entry) =>
+//                 "${entry.key}: ${entry.value}",
+//           )
+//           .join("\n");
+//     } else {
+//       text = _formatValue(value);
+//     }
+
+//     return Container(
+//       width: double.infinity,
+
+//       margin:
+//           const EdgeInsets.only(
+//         bottom: 10,
+//       ),
+
+//       padding:
+//           const EdgeInsets.all(14),
+
+//       decoration:
+//           BoxDecoration(
+//         color:
+//             const Color(0xFF0B1220),
+
+//         borderRadius:
+//             BorderRadius.circular(
+//           13,
+//         ),
+//       ),
+
+//       child: Column(
+//         crossAxisAlignment:
+//             CrossAxisAlignment.start,
+
+//         children: [
+//           Text(
+//             title,
+
+//             style:
+//                 const TextStyle(
+//               color:
+//                   Color(0xFF00C2FF),
+
+//               fontSize:
+//                   12,
+
+//               fontWeight:
+//                   FontWeight.bold,
+//             ),
+//           ),
+
+//           const SizedBox(
+//             height: 6,
+//           ),
+
+//           Text(
+//             text,
+
+//             style:
+//                 const TextStyle(
+//               color:
+//                   Colors.white,
+
+//               fontSize:
+//                   13,
+
+//               height:
+//                   1.5,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // ==========================================================
+//   // PRETTY FIELD NAME
+//   // ==========================================================
+
+//   String _prettyFieldName(
+//     String key,
+//   ) {
+//     String result =
+//         key.replaceAll(
+//       RegExp(r'[_-]+'),
+//       ' ',
+//     );
+
+//     result =
+//         result.replaceAllMapped(
+//       RegExp(r'([a-z])([A-Z])'),
+//       (match) =>
+//           "${match.group(1)} ${match.group(2)}",
+//     );
+
+//     return result
+//         .split(" ")
+//         .where(
+//           (word) =>
+//               word.isNotEmpty,
+//         )
+//         .map(
+//           (word) =>
+//               word[0].toUpperCase() +
+//               word.substring(1),
+//         )
+//         .join(" ");
+//   }
+
+//   // ==========================================================
+//   // EMPTY CAREER BANK
+//   // ==========================================================
+
+//   Widget _emptyCareerBank() {
+//     final bool hasInterest =
+//         userInterestFields.isNotEmpty;
+
+//     return ListView(
+//       physics:
+//           const AlwaysScrollableScrollPhysics(),
+
+//       padding:
+//           const EdgeInsets.all(20),
+
+//       children: [
+//         const SizedBox(
+//           height: 70,
+//         ),
+
+//         Icon(
+//           hasInterest
+//               ? Icons
+//                   .work_off_outlined
+//               : Icons
+//                   .interests_outlined,
+
+//           color:
+//               Colors.white24,
+
+//           size: 70,
+//         ),
+
+//         const SizedBox(
+//           height: 20,
+//         ),
+
+//         Text(
+//           hasInterest
+//               ? "No Matching Careers"
+//               : "Interest Field Not Added",
+
+//           textAlign:
+//               TextAlign.center,
+
+//           style:
+//               const TextStyle(
+//             color:
+//                 Colors.white,
+
+//             fontSize:
+//                 20,
+
+//             fontWeight:
+//                 FontWeight.bold,
+//           ),
+//         ),
+
+//         const SizedBox(
+//           height: 10,
+//         ),
+
+//         Text(
+//           hasInterest
+//               ? "No careers are currently available for your selected interest field."
+//               : "Please add your interest field in your profile to see relevant careers.",
+
+//           textAlign:
+//               TextAlign.center,
+
+//           style:
+//               const TextStyle(
+//             color:
+//                 Colors.white54,
+
+//             fontSize:
+//                 13,
+
+//             height:
+//                 1.5,
+//           ),
+//         ),
+
+//         if (hasInterest) ...[
+//           const SizedBox(
+//             height: 15,
+//           ),
+
+//           Center(
+//             child: Container(
+//               padding:
+//                   const EdgeInsets.symmetric(
+//                 horizontal: 14,
+//                 vertical: 9,
+//               ),
+
+//               decoration:
+//                   BoxDecoration(
+//                 color:
+//                     const Color(
+//                   0xFF151F32,
+//                 ),
+
+//                 borderRadius:
+//                     BorderRadius.circular(
+//                   10,
+//                 ),
+//               ),
+
+//               child: Text(
+//                 "Interest: ${userInterestFields.map((e) => formatCategory(e)).join(", ")}",
+
+//                 textAlign:
+//                     TextAlign.center,
+
+//                 style:
+//                     const TextStyle(
+//                   color:
+//                       Color(0xFF00C2FF),
+
+//                   fontSize:
+//                       12,
+
+//                   fontWeight:
+//                       FontWeight.w600,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+
+//         const SizedBox(
+//           height: 20,
+//         ),
+
+//         Center(
+//           child:
+//               OutlinedButton.icon(
+//             onPressed:
+//                 loadCareerBank,
+
+//             icon:
+//                 const Icon(
+//               Icons.refresh,
+//               color:
+//                   Color(0xFF00C2FF),
+//             ),
+
+//             label:
+//                 const Text(
+//               "Refresh",
+//               style:
+//                   TextStyle(
+//                 color:
+//                     Color(0xFF00C2FF),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
+
+
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -2616,6 +4361,9 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  final TextEditingController _searchController =
+      TextEditingController();
+
   bool isLoading = true;
 
   String userName = "Graduate";
@@ -2623,6 +4371,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
   // User's selected interest field(s)
   List<String> userInterestFields = [];
 
+  // All graduate careers fetched from Firestore
   List<Map<String, dynamic>> careers = [];
 
   // ==========================================================
@@ -2632,7 +4381,114 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
   @override
   void initState() {
     super.initState();
+
+    _searchController.addListener(() {
+      setState(() {});
+    });
+
     loadCareerBank();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  // ==========================================================
+  // SEARCHED / FILTERED CAREERS
+  // ==========================================================
+
+  List<Map<String, dynamic>> get filteredCareers {
+    final String searchText =
+        _searchController.text.trim().toLowerCase();
+
+    if (searchText.isEmpty) {
+      return careers;
+    }
+
+    return careers.where((career) {
+      return _careerContainsSearchText(
+        career,
+        searchText,
+      );
+    }).toList();
+  }
+
+  // ==========================================================
+  // SEARCH ALL FIRESTORE FIELDS
+  // ==========================================================
+
+  bool _careerContainsSearchText(
+    Map<String, dynamic> career,
+    String searchText,
+  ) {
+    for (final entry in career.entries) {
+      if (entry.key == "_saved") {
+        continue;
+      }
+
+      if (_valueContainsSearchText(
+        entry.value,
+        searchText,
+      )) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool _valueContainsSearchText(
+    dynamic value,
+    String searchText,
+  ) {
+    if (value == null) {
+      return false;
+    }
+
+    // String
+    if (value is String) {
+      return value.toLowerCase().contains(searchText);
+    }
+
+    // List
+    if (value is List) {
+      for (final item in value) {
+        if (_valueContainsSearchText(
+          item,
+          searchText,
+        )) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Map
+    if (value is Map) {
+      for (final entry in value.entries) {
+        if (_valueContainsSearchText(
+              entry.key,
+              searchText,
+            ) ||
+            _valueContainsSearchText(
+              entry.value,
+              searchText,
+            )) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Number / Boolean / Timestamp / Other
+    return value
+        .toString()
+        .toLowerCase()
+        .contains(searchText);
   }
 
   // ==========================================================
@@ -2691,26 +4547,16 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
       userName =
           userData["name"]?.toString().trim().isNotEmpty == true
               ? userData["name"].toString().trim()
-              : userData["fullName"]?.toString().trim().isNotEmpty == true
+              : userData["fullName"]
+                          ?.toString()
+                          .trim()
+                          .isNotEmpty ==
+                      true
                   ? userData["fullName"].toString().trim()
                   : "Graduate";
 
       // ========================================================
       // GET USER INTEREST FIELD
-      // ========================================================
-      //
-      // Firestore field:
-      //
-      //     instrest_field
-      //
-      // It can be:
-      //
-      // String:
-      // "Computer Science"
-      //
-      // OR List:
-      // ["Computer Science", "Engineering"]
-      //
       // ========================================================
 
       userInterestFields = _getUserInterestFields(
@@ -2726,46 +4572,38 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
       // ========================================================
 
       final QuerySnapshot careerSnapshot =
-          await _firestore.collection("careerBank").get();
+          await _firestore
+              .collection("careerBank")
+              .get();
 
       final List<Map<String, dynamic>> loadedCareers = [];
 
       // ========================================================
-      // FILTER CAREERS BY USER INTEREST
+      // ONLY GRADUATE ROLE
       // ========================================================
 
       for (final doc in careerSnapshot.docs) {
         final Map<String, dynamic> data =
             doc.data() as Map<String, dynamic>;
 
-        final String careerCategory =
-            _normalizeCategory(data["category"]);
+        final dynamic roleValue = data["role"];
 
-        // Skip career if category is missing
-        if (careerCategory.isEmpty) {
+        final String role =
+            roleValue?.toString().trim().toLowerCase() ?? "";
+
+        // ------------------------------------------------------
+        // IMPORTANT:
+        // ONLY CAREERS WHOSE ROLE IS GRADUATE
+        // ------------------------------------------------------
+
+        if (role != "graduate") {
           continue;
         }
 
-        // Check whether career category matches
-        // any user interest category.
-        final bool isMatching =
-            userInterestFields.any(
-          (interest) {
-            final String normalizedInterest =
-                _normalizeCategory(interest);
-
-            return normalizedInterest.isNotEmpty &&
-                normalizedInterest == careerCategory;
-          },
-        );
-
-        // ONLY ADD MATCHING CAREERS
-        if (isMatching) {
-          loadedCareers.add({
-            "id": doc.id,
-            ...data,
-          });
-        }
+        loadedCareers.add({
+          "id": doc.id,
+          ...data,
+        });
       }
 
       // ========================================================
@@ -2829,7 +4667,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
       return [];
     }
 
-    // If Firestore contains an array
+    // Firestore array
     if (value is List) {
       return value
           .map(
@@ -2841,8 +4679,9 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
           .toList();
     }
 
-    // If Firestore contains a single string
-    final String text = value.toString().trim();
+    // Firestore string
+    final String text =
+        value.toString().trim();
 
     if (text.isEmpty) {
       return [];
@@ -2853,19 +4692,6 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
 
   // ==========================================================
   // NORMALIZE CATEGORY
-  // ==========================================================
-  //
-  // This makes different spellings equivalent.
-  //
-  // Computer
-  // Computer Science
-  // computerscience
-  // computer_science
-  //
-  // ALL become:
-  //
-  // computerscience
-  //
   // ==========================================================
 
   String _normalizeCategory(
@@ -2884,13 +4710,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
       return "";
     }
 
-    // Remove spaces
     value = value.replaceAll(" ", "");
-
-    // Remove underscore
     value = value.replaceAll("_", "");
-
-    // Remove hyphen
     value = value.replaceAll("-", "");
 
     // ========================================================
@@ -2925,7 +4746,6 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
       return "engineering";
     }
 
-    // Return unknown category as it is
     return value;
   }
 
@@ -3163,10 +4983,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
       else {
         await savedRef.set({
           "careerId": careerId,
-
           "careerName":
               _getCareerName(career),
-
           "description":
               _getDescription(career),
 
@@ -3220,6 +5038,9 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
   Widget build(
     BuildContext context,
   ) {
+    final List<Map<String, dynamic>>
+        visibleCareers = filteredCareers;
+
     return Scaffold(
       backgroundColor:
           const Color(0xFF0B1220),
@@ -3227,7 +5048,6 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
       appBar: AppBar(
         backgroundColor:
             const Color(0xFF0B1220),
-
         elevation: 0,
 
         iconTheme:
@@ -3263,37 +5083,152 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
               onRefresh:
                   loadCareerBank,
 
-              child: careers.isEmpty
-                  ? _emptyCareerBank()
-                  : ListView(
-                      physics:
-                          const AlwaysScrollableScrollPhysics(),
+              child: ListView(
+                physics:
+                    const AlwaysScrollableScrollPhysics(),
 
+                padding:
+                    const EdgeInsets.all(18),
+
+                children: [
+                  _buildHeader(),
+
+                  const SizedBox(
+                    height: 18,
+                  ),
+
+                  // ==================================================
+                  // SEARCH BAR
+                  // ==================================================
+
+                  _buildSearchBar(),
+
+                  const SizedBox(
+                    height: 18,
+                  ),
+
+                  // ==================================================
+                  // RESULT COUNT
+                  // ==================================================
+
+                  if (_searchController
+                      .text
+                      .trim()
+                      .isNotEmpty)
+                    Padding(
                       padding:
-                          const EdgeInsets.all(
-                        18,
+                          const EdgeInsets.only(
+                        bottom: 12,
                       ),
-
-                      children: [
-                        _buildHeader(),
-
-                        const SizedBox(
-                          height: 20,
+                      child: Text(
+                        "${visibleCareers.length} result${visibleCareers.length == 1 ? '' : 's'} found",
+                        style:
+                            const TextStyle(
+                          color:
+                              Colors.white60,
+                          fontSize: 13,
+                          fontWeight:
+                              FontWeight.w500,
                         ),
-
-                        ...careers.map(
-                          (career) =>
-                              _careerCard(
-                            career,
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
+                      ),
                     ),
+
+                  // ==================================================
+                  // CAREERS
+                  // ==================================================
+
+                  if (visibleCareers.isEmpty)
+                    _emptySearchResult()
+                  else
+                    ...visibleCareers.map(
+                      (career) =>
+                          _careerCard(
+                        career,
+                      ),
+                    ),
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
+    );
+  }
+
+  // ==========================================================
+  // SEARCH BAR
+  // ==========================================================
+
+  Widget _buildSearchBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color:
+            const Color(0xFF151F32),
+        borderRadius:
+            BorderRadius.circular(15),
+        border: Border.all(
+          color: Colors.white10,
+        ),
+      ),
+
+      child: TextField(
+        controller:
+            _searchController,
+
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+        ),
+
+        cursorColor:
+            const Color(0xFF00C2FF),
+
+        decoration:
+            InputDecoration(
+          hintText:
+              "Search career, category, skills, salary...",
+          hintStyle:
+              const TextStyle(
+            color: Colors.white38,
+            fontSize: 13,
+          ),
+
+          prefixIcon:
+              const Icon(
+            Icons.search,
+            color:
+                Color(0xFF00C2FF),
+          ),
+
+          suffixIcon:
+              _searchController
+                      .text
+                      .isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        _searchController
+                            .clear();
+                      },
+                      icon:
+                          const Icon(
+                        Icons.clear,
+                        color:
+                            Colors.white54,
+                      ),
+                    )
+                  : null,
+
+          border:
+              InputBorder.none,
+
+          contentPadding:
+              const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+        ),
+      ),
     );
   }
 
@@ -3316,18 +5251,14 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
             Color(0xFF3654E0),
             Color(0xFF6278E8),
           ],
-
           begin:
               Alignment.topLeft,
-
           end:
               Alignment.bottomRight,
         ),
 
         borderRadius:
-            BorderRadius.circular(
-          22,
-        ),
+            BorderRadius.circular(22),
       ),
 
       child: Column(
@@ -3375,9 +5306,9 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
             height: 6,
           ),
 
-          Text(
-            "Career opportunities based on your interests, requirements and career information.",
-            style: const TextStyle(
+          const Text(
+            "Explore career opportunities available for graduates. Search any career information using the search bar.",
+            style: TextStyle(
               color: Colors.white70,
               fontSize: 13,
               height: 1.4,
@@ -3396,12 +5327,14 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
+
               children:
                   userInterestFields.map(
                 (interest) {
                   return Container(
                     padding:
-                        const EdgeInsets.symmetric(
+                        const EdgeInsets
+                            .symmetric(
                       horizontal: 12,
                       vertical: 7,
                     ),
@@ -3440,7 +5373,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
 
           Container(
             padding:
-                const EdgeInsets.symmetric(
+                const EdgeInsets
+                    .symmetric(
               horizontal: 12,
               vertical: 7,
             ),
@@ -3457,7 +5391,12 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
             ),
 
             child: Text(
-              "${careers.length} Matching Careers",
+              _searchController.text
+                      .trim()
+                      .isEmpty
+                  ? "${careers.length} Graduate Careers"
+                  : "${filteredCareers.length} Search Results",
+
               style:
                   const TextStyle(
                 color: Colors.white,
@@ -3510,9 +5449,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
             const Color(0xFF151F32),
 
         borderRadius:
-            BorderRadius.circular(
-          18,
-        ),
+            BorderRadius.circular(18),
 
         border: Border.all(
           color: saved
@@ -3562,12 +5499,10 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                     categoryIcon(
                       career["category"],
                     ),
-
                     color:
                         const Color(
                       0xFF00C2FF,
                     ),
-
                     size: 28,
                   ),
                 ),
@@ -3584,15 +5519,11 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                     children: [
                       Text(
                         careerName,
-
                         style:
                             const TextStyle(
                           color:
                               Colors.white,
-
-                          fontSize:
-                              17,
-
+                          fontSize: 17,
                           fontWeight:
                               FontWeight.bold,
                         ),
@@ -3607,17 +5538,11 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                                 "Not added"
                             ? "Career"
                             : role,
-
                         style:
                             const TextStyle(
                           color:
-                              Color(
-                            0xFF00C2FF,
-                          ),
-
-                          fontSize:
-                              11,
-
+                              Color(0xFF00C2FF),
+                          fontSize: 11,
                           fontWeight:
                               FontWeight.w600,
                         ),
@@ -3644,7 +5569,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                   icon: Icon(
                     saved
                         ? Icons.bookmark
-                        : Icons.bookmark_border,
+                        : Icons
+                            .bookmark_border,
 
                     color: saved
                         ? const Color(
@@ -3668,9 +5594,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
 
             Text(
               description,
-
               maxLines: 4,
-
               overflow:
                   TextOverflow.ellipsis,
 
@@ -3678,12 +5602,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                   const TextStyle(
                 color:
                     Colors.white60,
-
-                fontSize:
-                    13,
-
-                height:
-                    1.5,
+                fontSize: 13,
+                height: 1.5,
               ),
             ),
 
@@ -3739,7 +5659,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
 
                 icon:
                     const Icon(
-                  Icons.visibility_outlined,
+                  Icons
+                      .visibility_outlined,
                   color:
                       Color(0xFF00C2FF),
                   size: 16,
@@ -3751,13 +5672,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                   style:
                       TextStyle(
                     color:
-                        Color(
-                      0xFF00C2FF,
-                    ),
-
-                    fontSize:
-                        12,
-
+                        Color(0xFF00C2FF),
+                    fontSize: 12,
                     fontWeight:
                         FontWeight.bold,
                   ),
@@ -3780,7 +5696,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
   ) {
     return Container(
       padding:
-          const EdgeInsets.symmetric(
+          const EdgeInsets
+              .symmetric(
         horizontal: 9,
         vertical: 6,
       ),
@@ -3791,9 +5708,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
             .withOpacity(0.05),
 
         borderRadius:
-            BorderRadius.circular(
-          8,
-        ),
+            BorderRadius.circular(8),
       ),
 
       child: Row(
@@ -3814,14 +5729,11 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
 
           Text(
             text,
-
             style:
                 const TextStyle(
               color:
                   Colors.white54,
-
-              fontSize:
-                  10,
+              fontSize: 10,
             ),
           ),
         ],
@@ -3842,7 +5754,10 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
     final bool saved =
         career["_saved"] == true;
 
-    // Remove internal fields
+    // ========================================================
+    // SHOW EVERY FIRESTORE FIELD
+    // ========================================================
+
     final Map<String, dynamic>
         displayFields = {};
 
@@ -3941,10 +5856,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                                 const TextStyle(
                               color:
                                   Colors.white,
-
-                              fontSize:
-                                  22,
-
+                              fontSize: 22,
                               fontWeight:
                                   FontWeight.bold,
                             ),
@@ -4011,10 +5923,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                               TextStyle(
                             color:
                                 Colors.white,
-
-                            fontSize:
-                                17,
-
+                            fontSize: 17,
                             fontWeight:
                                 FontWeight.bold,
                           ),
@@ -4095,9 +6004,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
             const Color(0xFF0B1220),
 
         borderRadius:
-            BorderRadius.circular(
-          13,
-        ),
+            BorderRadius.circular(13),
       ),
 
       child: Column(
@@ -4112,10 +6019,7 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                 const TextStyle(
               color:
                   Color(0xFF00C2FF),
-
-              fontSize:
-                  12,
-
+              fontSize: 12,
               fontWeight:
                   FontWeight.bold,
             ),
@@ -4132,12 +6036,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
                 const TextStyle(
               color:
                   Colors.white,
-
-              fontSize:
-                  13,
-
-              height:
-                  1.5,
+              fontSize: 13,
+              height: 1.5,
             ),
           ),
         ],
@@ -4180,143 +6080,126 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
   }
 
   // ==========================================================
-  // EMPTY CAREER BANK
+  // EMPTY SEARCH RESULT
   // ==========================================================
 
-  Widget _emptyCareerBank() {
-    final bool hasInterest =
-        userInterestFields.isNotEmpty;
+  Widget _emptySearchResult() {
+    final bool searching =
+        _searchController.text
+            .trim()
+            .isNotEmpty;
 
-    return ListView(
-      physics:
-          const AlwaysScrollableScrollPhysics(),
+    return Container(
+      width: double.infinity,
 
       padding:
-          const EdgeInsets.all(20),
+          const EdgeInsets.all(30),
 
-      children: [
-        const SizedBox(
-          height: 70,
+      decoration:
+          BoxDecoration(
+        color:
+            const Color(0xFF151F32),
+
+        borderRadius:
+            BorderRadius.circular(18),
+
+        border:
+            Border.all(
+          color: Colors.white10,
         ),
+      ),
 
-        Icon(
-          hasInterest
-              ? Icons
-                  .work_off_outlined
-              : Icons
-                  .interests_outlined,
+      child: Column(
+        children: [
+          Icon(
+            searching
+                ? Icons.search_off
+                : Icons.work_off_outlined,
 
-          color:
-              Colors.white24,
-
-          size: 70,
-        ),
-
-        const SizedBox(
-          height: 20,
-        ),
-
-        Text(
-          hasInterest
-              ? "No Matching Careers"
-              : "Interest Field Not Added",
-
-          textAlign:
-              TextAlign.center,
-
-          style:
-              const TextStyle(
             color:
-                Colors.white,
+                Colors.white24,
 
-            fontSize:
-                20,
-
-            fontWeight:
-                FontWeight.bold,
+            size: 65,
           ),
-        ),
 
-        const SizedBox(
-          height: 10,
-        ),
-
-        Text(
-          hasInterest
-              ? "No careers are currently available for your selected interest field."
-              : "Please add your interest field in your profile to see relevant careers.",
-
-          textAlign:
-              TextAlign.center,
-
-          style:
-              const TextStyle(
-            color:
-                Colors.white54,
-
-            fontSize:
-                13,
-
-            height:
-                1.5,
-          ),
-        ),
-
-        if (hasInterest) ...[
           const SizedBox(
-            height: 15,
+            height: 18,
           ),
 
-          Center(
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 9,
-              ),
+          Text(
+            searching
+                ? "No Careers Found"
+                : "No Graduate Careers",
 
-              decoration:
-                  BoxDecoration(
+            textAlign:
+                TextAlign.center,
+
+            style:
+                const TextStyle(
+              color:
+                  Colors.white,
+              fontSize: 19,
+              fontWeight:
+                  FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(
+            height: 10,
+          ),
+
+          Text(
+            searching
+                ? "Try searching with another career name, category, skill, qualification or any other career field."
+                : "There are currently no careers with the Graduate role in the Career Bank.",
+
+            textAlign:
+                TextAlign.center,
+
+            style:
+                const TextStyle(
+              color:
+                  Colors.white54,
+              fontSize: 13,
+              height: 1.5,
+            ),
+          ),
+
+          if (searching) ...[
+            const SizedBox(
+              height: 18,
+            ),
+
+            OutlinedButton.icon(
+              onPressed: () {
+                _searchController
+                    .clear();
+              },
+
+              icon:
+                  const Icon(
+                Icons.clear,
                 color:
-                    const Color(
-                  0xFF151F32,
-                ),
-
-                borderRadius:
-                    BorderRadius.circular(
-                  10,
-                ),
+                    Color(0xFF00C2FF),
               ),
 
-              child: Text(
-                "Interest: ${userInterestFields.map((e) => formatCategory(e)).join(", ")}",
-
-                textAlign:
-                    TextAlign.center,
-
+              label:
+                  const Text(
+                "Clear Search",
                 style:
-                    const TextStyle(
+                    TextStyle(
                   color:
                       Color(0xFF00C2FF),
-
-                  fontSize:
-                      12,
-
-                  fontWeight:
-                      FontWeight.w600,
                 ),
               ),
             ),
+          ],
+
+          const SizedBox(
+            height: 10,
           ),
-        ],
 
-        const SizedBox(
-          height: 20,
-        ),
-
-        Center(
-          child:
-              OutlinedButton.icon(
+          OutlinedButton.icon(
             onPressed:
                 loadCareerBank,
 
@@ -4337,8 +6220,8 @@ class _GraduateCareerBankState extends State<GraduateCareerBank> {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

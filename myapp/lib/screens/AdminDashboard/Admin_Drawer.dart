@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/screens/AdminDashboard/Admin_Resource_Page.dart';
 import 'package:myapp/screens/AdminDashboard/Admin_Story_Approval.dart';
+import 'package:myapp/screens/AdminDashboard/Admin_Video.dart';
+import 'package:myapp/screens/AdminDashboard/Admin_quiz_manage.dart';
+import 'package:myapp/screens/AdminDashboard/Admin_stories_manage.dart';
+import 'package:myapp/screens/AdminDashboard/User_manage.dart';
+import 'package:myapp/screens/AdminDashboard/admin_career_manage.dart';
 
 // Apni actual screen imports yahan add/update kar lena.
 import 'package:myapp/screens/AdminDashboard/admin_dashboard.dart';
@@ -96,6 +102,93 @@ class AdminDrawer extends StatelessWidget {
                   );
                 },
               ),
+             
+              _drawerItem(
+                context,
+                Icons.people_outline,
+                "Users",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const UserManagementPage(),
+                    ),
+                  );
+                },
+              ),
+
+
+              _drawerItem(
+                context,
+                Icons.video_library_outlined,
+                "Vedio Management",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AdminVideoPage(),
+                    ),
+                  );
+                },
+              ),
+              
+              
+              _drawerItem(
+                context,
+                Icons.library_books_outlined,
+                "Resource Management",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AdminResourcePage(),
+                    ),
+                  );
+                },
+              ),
+
+              _drawerItem(
+                context,
+                Icons.work_outline,
+                "Career Management",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AdminCareerPage(),
+                    ),
+                  );
+                },
+              ),
+
+              _drawerItem(
+                context,
+                Icons.quiz_outlined,
+                "Quiz Management",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const AdminQuizPage(),
+                    ),
+                  );
+                },
+              ),
 
               // =====================================================
               // USERS
@@ -124,7 +217,7 @@ class AdminDrawer extends StatelessWidget {
 
               _drawerItem(
                 context,
-                Icons.work_outline,
+                Icons.account_balance_outlined,
                 "Career Bank",
                 () {
                   Navigator.pop(context);
@@ -216,22 +309,22 @@ class AdminDrawer extends StatelessWidget {
               // SETTINGS
               // =====================================================
 
-              _drawerItem(
-                context,
-                Icons.settings_outlined,
-                "Settings",
-                () {
-                  Navigator.pop(context);
+              // _drawerItem(
+              //   context,
+              //   Icons.settings_outlined,
+              //   "Settings",
+              //   () {
+              //     Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Settings coming next.",
-                      ),
-                    ),
-                  );
-                },
-              ),
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text(
+              //           "Settings coming next.",
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
 
               // =====================================================
               // LOGOUT

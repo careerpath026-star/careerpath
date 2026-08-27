@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:myapp/screens/GraduateDashboard/Saved_Careers.dart';
 import 'package:myapp/screens/GraduateDashboard/graduate_careers.dart';
 import 'package:myapp/screens/GraduateDashboard/graduate_profile.dart';
+import 'package:myapp/screens/GraduateDashboard/graduate_quiz_attempt.dart';
+import 'package:myapp/screens/GraduateDashboard/graduate_resources.dart';
 import 'package:myapp/screens/GraduateDashboard/graduate_success_stories.dart';
+import 'package:myapp/screens/GraduateDashboard/graduate_videos.dart';
+import 'package:myapp/screens/auth/login_screen.dart';
 
 class GraduateDrawer extends StatelessWidget {
   const GraduateDrawer({super.key});
@@ -11,7 +15,6 @@ class GraduateDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: const Color(0xFF0B1220),
-
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -42,9 +45,7 @@ class GraduateDrawer extends StatelessWidget {
                         color: Color(0xFF0B1220),
                       ),
                     ),
-
                     const SizedBox(height: 14),
-
                     const Text(
                       "Graduate Panel",
                       style: TextStyle(
@@ -53,9 +54,7 @@ class GraduateDrawer extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 4),
-
                     const Text(
                       "Career Path",
                       style: TextStyle(
@@ -222,8 +221,7 @@ class GraduateDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const GraduateProfile(),
+                      builder: (context) => const GraduateProfile(),
                     ),
                   );
                 },
@@ -231,7 +229,7 @@ class GraduateDrawer extends StatelessWidget {
 
               _drawerItem(
                 context,
-                Icons.person_outline,
+                Icons.work_outline,
                 "Career Bank",
                 () {
                   Navigator.pop(context);
@@ -239,8 +237,7 @@ class GraduateDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const GraduateCareerBank(),
+                      builder: (context) => const GraduateCareerBank(),
                     ),
                   );
                 },
@@ -248,7 +245,7 @@ class GraduateDrawer extends StatelessWidget {
 
               _drawerItem(
                 context,
-                Icons.person_outline,
+                Icons.bookmark_outline,
                 "Saved Career",
                 () {
                   Navigator.pop(context);
@@ -256,8 +253,7 @@ class GraduateDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const SavedCareersScreen(),
+                      builder: (context) => const SavedCareersScreen(),
                     ),
                   );
                 },
@@ -265,7 +261,7 @@ class GraduateDrawer extends StatelessWidget {
 
               _drawerItem(
                 context,
-                Icons.person_outline,
+                Icons.emoji_events_outlined,
                 "Success Stories",
                 () {
                   Navigator.pop(context);
@@ -273,8 +269,55 @@ class GraduateDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const GraduateSuccessStories(),
+                      builder: (context) => const GraduateSuccessStories(),
+                    ),
+                  );
+                },
+              ),
+
+              _drawerItem(
+                context,
+                Icons.menu_book_outlined,
+                "Resources",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GraduateResourcesPage(),
+                    ),
+                  );
+                },
+              ),
+
+              _drawerItem(
+                context,
+                Icons.video_library_outlined,
+                "Career Guidelines",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GraduateVideosPage(),
+                    ),
+                  );
+                },
+              ),
+
+              _drawerItem(
+                context,
+                Icons.quiz_outlined,
+                "Career Quiz",
+                () {
+                  Navigator.pop(context);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GraduateQuizAttemptPage(),
                     ),
                   );
                 },
@@ -301,11 +344,10 @@ class GraduateDrawer extends StatelessWidget {
                 () {
                   Navigator.pop(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Logout coming next.",
-                      ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
                     ),
                   );
                 },
@@ -336,13 +378,11 @@ class GraduateDrawer extends StatelessWidget {
         horizontal: 22,
         vertical: 1,
       ),
-
       leading: Icon(
         icon,
         color: color,
         size: 23,
       ),
-
       title: Text(
         title,
         style: TextStyle(
@@ -351,7 +391,6 @@ class GraduateDrawer extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
       ),
-
       onTap: onTap,
     );
   }
